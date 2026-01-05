@@ -38,6 +38,10 @@ export default tseslint.config(
       "@typescript-eslint/consistent-type-imports": "error",
       "react/self-closing-comp": "error",
       "func-style": ["error", "expression"],
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
       eqeqeq: "error",
     },
   },
