@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export const Header = () => {
-  // TODO: Auth Store 연동
+  // TODO(FE-12): Auth Store 연동 - 현재는 UI 테스트용 Mock
   const isLoggedIn = false;
 
   return (
