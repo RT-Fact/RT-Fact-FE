@@ -20,7 +20,7 @@ const EditorContainer = ({ text, onTextChange, placeholder }: EditorContainerPro
   };
 
   return (
-    <div className="relative h-full rounded-lg border-2 border-dashed border-muted/50 bg-card/50 shadow-sm transition-all duration-200 focus-within:border-primary/30 focus-within:shadow-md">
+    <div className="relative flex-1 w-full min-h-[500px] rounded-lg border-2 border-dashed border-muted/50 bg-card/50 shadow-sm transition-all duration-200 focus-within:border-primary/30 focus-within:shadow-md">
       <HighlightOverlay ref={overlayRef}>{text}</HighlightOverlay>
       <EditorTextarea
         ref={textareaRef}

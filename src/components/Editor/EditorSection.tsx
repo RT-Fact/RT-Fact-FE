@@ -7,18 +7,22 @@ import { Button } from "@/components/ui/button";
 import EditorContainer from "./EditorContainer";
 
 const EditorSection = () => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState<string>("");
 
+  // TODO(FE-14): POST /factcheck API 연동
+  // - 응답으로 받은 sentences 기반 하이라이팅 (FE-04)
   const handleCheck = () => {
     console.log("전체 검사:", text);
   };
 
+  // TODO: 샘플 텍스트 로드 기능
+  // - 기획 확정 후 구현 여부 결정
   const handleSample = () => {
     console.log("샘플 버튼 클릭");
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       {/* Toolbar */}
       <div className="flex items-center justify-between border-b border-border bg-background/50 px-4 py-3 backdrop-blur-sm">
         <div className="flex items-center gap-3">
@@ -45,7 +49,7 @@ const EditorSection = () => {
       </div>
 
       {/* 에디터 */}
-      <div className="m-4 min-h-0 flex-1">
+      <div className="m-4 flex min-h-0 flex-1 flex-col">
         <EditorContainer
           text={text}
           onTextChange={setText}
