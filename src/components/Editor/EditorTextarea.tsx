@@ -6,10 +6,11 @@ interface EditorTextareaProps {
   value: string;
   onChange: (value: string) => void;
   onScroll: () => void;
+  placeholder: string;
   ref: Ref<HTMLTextAreaElement>;
 }
 
-const EditorTextarea = ({ value, onChange, onScroll, ref }: EditorTextareaProps) => {
+const EditorTextarea = ({ value, onChange, onScroll, placeholder, ref }: EditorTextareaProps) => {
   return (
     <textarea
       ref={ref}
@@ -18,11 +19,12 @@ const EditorTextarea = ({ value, onChange, onScroll, ref }: EditorTextareaProps)
         "font-editor text-editor leading-editor p-editor tracking-editor",
         "whitespace-pre-wrap wrap-break-word",
         "bg-transparent resize-none border-none outline-none",
-        "caret-foreground",
+        "caret-foreground placeholder:text-muted-foreground/60",
       )}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onScroll={onScroll}
+      placeholder={placeholder}
     />
   );
 };

@@ -1,18 +1,15 @@
+import EditorSection from "@/components/Editor/EditorSection";
+
 export const HomePage = () => {
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      {/* Editor Mock Column */}
-      <div className="rounded-lg border bg-card p-6 shadow-sm min-h-[300px]">
-        <h2 className="mb-4 text-xl font-semibold">Editor Area</h2>
-        <p className="text-muted-foreground">
-          좌측(데스크톱) 또는 상단(모바일) 영역입니다.
-          <br />
-          여기에 에디터가 들어갑니다.
-        </p>
+    <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+      {/* Editor Column */}
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:w-[60%]">
+        <EditorSection />
       </div>
 
       {/* Results/History Mock Column */}
-      <div className="rounded-lg border bg-card p-6 shadow-sm min-h-[300px]">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-l border-border p-6 lg:w-[40%] lg:flex-none">
         <h2 className="mb-4 text-xl font-semibold">Results / History</h2>
         <p className="text-muted-foreground">
           우측(데스크톱) 또는 하단(모바일) 영역입니다.

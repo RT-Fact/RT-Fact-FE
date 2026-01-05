@@ -1,11 +1,15 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 import EditorTextarea from "./EditorTextarea";
 import HighlightOverlay from "./HighlightOverlay";
 
-const EditorContainer = () => {
-  const [text, setText] = useState("");
+interface EditorContainerProps {
+  text: string;
+  onTextChange: (text: string) => void;
+  placeholder: string;
+}
 
+const EditorContainer = ({ text, onTextChange, placeholder }: EditorContainerProps) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -16,9 +20,15 @@ const EditorContainer = () => {
   };
 
   return (
-    <div className="relative h-full">
+    <div className="relative h-full rounded-lg border-2 border-dashed border-muted/50 bg-card/50 shadow-sm transition-all duration-200 focus-within:border-primary/30 focus-within:shadow-md">
       <HighlightOverlay ref={overlayRef}>{text}</HighlightOverlay>
-      <EditorTextarea ref={textareaRef} value={text} onChange={setText} onScroll={handleScroll} />
+      <EditorTextarea
+        ref={textareaRef}
+        value={text}
+        onChange={onTextChange}
+        onScroll={handleScroll}
+        placeholder={placeholder}
+      />
     </div>
   );
 };
