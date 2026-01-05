@@ -1,0 +1,30 @@
+import type { Ref } from "react";
+
+import { cn } from "@/lib/utils";
+
+interface EditorTextareaProps {
+  value: string;
+  onChange: (value: string) => void;
+  onScroll: () => void;
+  ref: Ref<HTMLTextAreaElement>;
+}
+
+const EditorTextarea = ({ value, onChange, onScroll, ref }: EditorTextareaProps) => {
+  return (
+    <textarea
+      ref={ref}
+      className={cn(
+        "absolute inset-0 overflow-auto",
+        "font-editor text-editor leading-editor p-editor tracking-editor",
+        "whitespace-pre-wrap wrap-break-word",
+        "bg-transparent resize-none border-none outline-none",
+        "caret-foreground",
+      )}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      onScroll={onScroll}
+    />
+  );
+};
+
+export default EditorTextarea;
