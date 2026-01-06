@@ -7,9 +7,10 @@ interface EditorContainerProps {
   text: string;
   onTextChange: (text: string) => void;
   placeholder: string;
+  disabled?: boolean;
 }
 
-const EditorContainer = ({ text, onTextChange, placeholder }: EditorContainerProps) => {
+const EditorContainer = ({ text, onTextChange, placeholder, disabled }: EditorContainerProps) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -28,6 +29,7 @@ const EditorContainer = ({ text, onTextChange, placeholder }: EditorContainerPro
         onChange={onTextChange}
         onScroll={handleScroll}
         placeholder={placeholder}
+        disabled={disabled}
       />
     </div>
   );

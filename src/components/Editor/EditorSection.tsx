@@ -71,6 +71,7 @@ const EditorSection = () => {
           text={text}
           onTextChange={setText}
           placeholder="팩트체크할 텍스트를 입력하거나 붙여넣기 하세요..."
+          disabled={isChecking}
         />
       </div>
     </div>

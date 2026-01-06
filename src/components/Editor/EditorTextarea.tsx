@@ -5,10 +5,18 @@ interface EditorTextareaProps {
   onChange: (value: string) => void;
   onScroll: () => void;
   placeholder: string;
+  disabled?: boolean;
   ref: Ref<HTMLTextAreaElement>;
 }
 
-const EditorTextarea = ({ value, onChange, onScroll, placeholder, ref }: EditorTextareaProps) => {
+const EditorTextarea = ({
+  value,
+  onChange,
+  onScroll,
+  placeholder,
+  disabled,
+  ref,
+}: EditorTextareaProps) => {
   return (
     <textarea
       ref={ref}
@@ -18,11 +26,13 @@ const EditorTextarea = ({ value, onChange, onScroll, placeholder, ref }: EditorT
         whitespace-pre-wrap wrap-break-word
         bg-transparent resize-none border-none outline-none
         caret-foreground placeholder:text-muted-foreground/60
+        disabled:cursor-not-allowed disabled:opacity-60
       `}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onScroll={onScroll}
       placeholder={placeholder}
+      disabled={disabled}
     />
   );
 };
