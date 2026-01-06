@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { FileText, Search, Sparkles } from "lucide-react";
+import { FileText, Loader2, Search, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -8,11 +8,13 @@ import EditorContainer from "./EditorContainer";
 
 const EditorSection = () => {
   const [text, setText] = useState<string>("");
+  const [isChecking, setIsChecking] = useState<boolean>(false);
 
-  // TODO(FE-14): POST /factcheck API 연동
-  // - 응답으로 받은 sentences 기반 하이라이팅 (FE-04)
   const handleCheck = () => {
-    console.log("전체 검사:", text);
+    setIsChecking(true);
+    // TODO(FE-14): POST /factcheck API 연동
+    // - API 응답 후 setIsChecking(false) 호출
+    // - 응답으로 받은 sentences 기반 하이라이팅 (FE-04)
   };
 
   // TODO: 샘플 텍스트 로드 기능
@@ -37,12 +39,27 @@ const EditorSection = () => {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={handleSample}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5"
+            onClick={handleSample}
+            disabled={isChecking}
+          >
             <FileText className="size-4" />
             샘플
           </Button>
-          <Button size="sm" className="gap-1.5" onClick={handleCheck}>
-            <Search className="size-4" />
+          <Button
+            size="sm"
+            className="gap-1.5"
+            onClick={handleCheck}
+            disabled={!text.trim() || isChecking}
+          >
+            {isChecking ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Search className="size-4" />
+            )}
             전체 검사
           </Button>
         </div>
