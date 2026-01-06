@@ -50,6 +50,17 @@
 }
 
 :root {
+  /* Verdict Colors (OKLCH) */
+  --verdict-true: oklch(0.792 0.209 151.711);
+  --verdict-true-bg: oklch(0.792 0.209 151.711 / 15%);
+  --verdict-true-bg-hover: oklch(0.792 0.209 151.711 / 25%);
+  --verdict-false: oklch(0.704 0.191 22.216);
+  --verdict-false-bg: oklch(0.704 0.191 22.216 / 15%);
+  --verdict-false-bg-hover: oklch(0.704 0.191 22.216 / 25%);
+  --verdict-opinion: oklch(0.673 0.182 276.935);
+  --verdict-opinion-bg: oklch(0.673 0.182 276.935 / 15%);
+  --verdict-opinion-bg-hover: oklch(0.673 0.182 276.935 / 25%);
+
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -133,5 +144,37 @@
 @utility editor-layer {
   @apply absolute inset-0 overflow-auto;
   @apply font-editor text-editor leading-editor p-editor tracking-editor;
-  @apply whitespace-pre-wrap wrap-break-word;
+  @apply whitespace-pre-wrap break-words;
+}
+
+/* Highlight styles - 팩트체크 결과 하이라이팅 (그라데이션 배경) */
+@utility highlight-base {
+  @apply py-[0.1em] px-[0.25em];
+  @apply my-0 -mx-[0.1em];
+  @apply rounded cursor-pointer pointer-events-auto;
+  @apply transition-all duration-200;
+}
+
+@utility highlight-true {
+  @apply highlight-base;
+  background: linear-gradient(to bottom, transparent 60%, var(--verdict-true-bg) 60%);
+  &:hover {
+    background: linear-gradient(to bottom, transparent 50%, var(--verdict-true-bg-hover) 50%);
+  }
+}
+
+@utility highlight-false {
+  @apply highlight-base;
+  background: linear-gradient(to bottom, transparent 60%, var(--verdict-false-bg) 60%);
+  &:hover {
+    background: linear-gradient(to bottom, transparent 50%, var(--verdict-false-bg-hover) 50%);
+  }
+}
+
+@utility highlight-opinion {
+  @apply highlight-base;
+  background: linear-gradient(to bottom, transparent 60%, var(--verdict-opinion-bg) 60%);
+  &:hover {
+    background: linear-gradient(to bottom, transparent 50%, var(--verdict-opinion-bg-hover) 50%);
+  }
 }

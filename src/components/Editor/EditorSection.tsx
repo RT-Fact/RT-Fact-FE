@@ -1,20 +1,37 @@
 import { useState } from "react";
 
-import { Loader2, Search, Sparkles } from "lucide-react";
+import { FileText, Loader2, Search, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+// TODO(REMOVE): API 연동 후 삭제 - 목 데이터 import
+import { mockEditorText, mockSentences } from "@/mocks/sentences";
+import type { Sentence } from "@/types/sentence";
 
 import EditorContainer from "./EditorContainer";
 
 const EditorSection = () => {
   const [text, setText] = useState<string>("");
+  const [sentences, setSentences] = useState<Sentence[]>([]);
   const [isChecking, setIsChecking] = useState<boolean>(false);
+
+  // TODO(REMOVE): API 연동 후 삭제 - 샘플 버튼 핸들러
+  const handleSample = () => {
+    setText(mockEditorText);
+    setSentences([]);
+  };
 
   const handleCheck = () => {
     setIsChecking(true);
     // TODO(FE-14): POST /factcheck API 연동
-    // - API 응답 후 setIsChecking(false) 호출
-    // - 응답으로 받은 sentences 기반 하이라이팅 (FE-04)
+    setTimeout(() => {
+      setSentences(mockSentences);
+      setIsChecking(false);
+    }, 1000);
+  };
+
+  const handleHighlightClick = (sentenceId: string) => {
+    console.log("Clicked sentence:", sentenceId);
+    // TODO(FE-06): 결과 패널 카드 활성화
   };
 
   return (
@@ -33,6 +50,11 @@ const EditorSection = () => {
           )}
         </div>
         <div className="flex items-center gap-2">
+          {/* TODO(REMOVE): API 연동 후 삭제 - 샘플 버튼 */}
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={handleSample}>
+            <FileText className="size-4" />
+            샘플
+          </Button>
           <Button
             size="sm"
             className="gap-1.5"
@@ -56,6 +78,8 @@ const EditorSection = () => {
           onTextChange={setText}
           placeholder="팩트체크할 텍스트를 입력하거나 붙여넣기 하세요..."
           disabled={isChecking}
+          sentences={sentences}
+          onHighlightClick={handleHighlightClick}
         />
       </div>
     </div>
