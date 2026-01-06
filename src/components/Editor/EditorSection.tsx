@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { FileText, Loader2, Search, Sparkles } from "lucide-react";
+import { Loader2, Search, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -15,12 +15,6 @@ const EditorSection = () => {
     // TODO(FE-14): POST /factcheck API 연동
     // - API 응답 후 setIsChecking(false) 호출
     // - 응답으로 받은 sentences 기반 하이라이팅 (FE-04)
-  };
-
-  // TODO: 샘플 텍스트 로드 기능
-  // - 기획 확정 후 구현 여부 결정
-  const handleSample = () => {
-    console.log("샘플 버튼 클릭");
   };
 
   return (
@@ -39,16 +33,6 @@ const EditorSection = () => {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-1.5"
-            onClick={handleSample}
-            disabled={isChecking}
-          >
-            <FileText className="size-4" />
-            샘플
-          </Button>
           <Button
             size="sm"
             className="gap-1.5"
