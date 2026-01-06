@@ -149,10 +149,10 @@
 
 /* Highlight styles - 팩트체크 결과 하이라이팅 (그라데이션 배경) */
 @utility highlight-base {
-  @apply py-[0.1em] px-[0.25em];
-  @apply my-0 -mx-[0.1em];
   @apply rounded cursor-pointer pointer-events-auto;
   @apply transition-all duration-200;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 @utility highlight-true {

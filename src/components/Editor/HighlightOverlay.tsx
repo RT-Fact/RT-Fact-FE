@@ -18,7 +18,7 @@ const HighlightOverlay = ({ text, sentences, onHighlightClick, ref }: HighlightO
   const segments = createHighlightSegments(text, sentencesWithPosition);
 
   return (
-    <div ref={ref} className="editor-layer pointer-events-none text-transparent">
+    <div ref={ref} className="editor-layer pointer-events-none text-transparent z-10">
       {segments.map((segment) =>
         segment.type === "plain" ? (
           <span key={segment.key}>{segment.content}</span>
