@@ -21,9 +21,7 @@ const EditorTextarea = ({
     <textarea
       ref={ref}
       className={`
-        absolute inset-0 overflow-auto
-        font-editor text-editor leading-editor p-editor tracking-editor
-        whitespace-pre-wrap wrap-break-word
+        editor-layer
         bg-transparent resize-none border-none outline-none
         caret-foreground placeholder:text-muted-foreground/60
         disabled:cursor-not-allowed disabled:opacity-60
