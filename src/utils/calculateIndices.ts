@@ -1,4 +1,4 @@
-import type { Sentence, SentenceWithPosition } from "@/types/sentence";
+import type { Sentence, SentenceWithIndices } from "@/types/sentence";
 
 /**
  * sentences 배열의 각 문장에 대해 editorText 내 위치를 계산합니다.
@@ -11,10 +11,10 @@ import type { Sentence, SentenceWithPosition } from "@/types/sentence";
  * - sentences는 반드시 텍스트 내 등장 순서(position)대로 정렬되어야 합니다
  * - 문장을 찾지 못하면 startIndex, endIndex가 -1로 설정됩니다
  */
-export const calculatePositions = (
+export const calculateIndices = (
   editorText: string,
   sentences: Sentence[],
-): SentenceWithPosition[] => {
+): SentenceWithIndices[] => {
   let searchFrom = 0;
 
   return sentences.map((sentence) => {

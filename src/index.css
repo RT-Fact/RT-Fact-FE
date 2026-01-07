@@ -144,7 +144,8 @@
 @utility editor-layer {
   @apply absolute inset-0 overflow-auto;
   @apply font-editor text-editor leading-editor p-editor tracking-editor;
-  @apply whitespace-pre-wrap break-words;
+  @apply whitespace-pre-wrap;
+  overflow-wrap: break-word;
 }
 
 /* Highlight styles - 팩트체크 결과 하이라이팅 (그라데이션 배경) */

@@ -1,4 +1,4 @@
-import type { SentenceWithPosition } from "@/types/sentence";
+import type { SentenceWithIndices } from "@/types/sentence";
 import { isClaim } from "@/types/sentence";
 
 const HIGHLIGHT_CLASS = {
@@ -8,7 +8,7 @@ const HIGHLIGHT_CLASS = {
 } as const;
 
 interface HighlightSpanProps {
-  sentence: SentenceWithPosition;
+  sentence: SentenceWithIndices;
   onClick: (id: string) => void;
 }
 

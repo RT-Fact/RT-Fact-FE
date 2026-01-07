@@ -28,7 +28,7 @@ export interface OpinionSentence extends BaseSentence {
 
 export type Sentence = ClaimSentence | OpinionSentence;
 
-export type SentenceWithPosition = Sentence & {
+export type SentenceWithIndices = Sentence & {
   startIndex: number;
   endIndex: number;
 };

@@ -1,11 +1,19 @@
-import type { SentenceWithPosition } from "@/types/sentence";
+import type { SentenceWithIndices } from "@/types/sentence";
 
-export interface TextSegment {
-  type: "plain" | "highlight";
+interface PlainSegment {
+  type: "plain";
   content: string;
   key: string;
-  sentence?: SentenceWithPosition;
 }
+
+interface HighlightSegment {
+  type: "highlight";
+  content: string;
+  key: string;
+  sentence: SentenceWithIndices;
+}
+
+export type TextSegment = PlainSegment | HighlightSegment;
 
 const createPlainSegment = (content: string, index: number): TextSegment => ({
   type: "plain",
@@ -13,7 +21,7 @@ const createPlainSegment = (content: string, index: number): TextSegment => ({
   key: `plain-${index}`,
 });
 
-const createHighlightSegment = (sentence: SentenceWithPosition): TextSegment => ({
+const createHighlightSegment = (sentence: SentenceWithIndices): TextSegment => ({
   type: "highlight",
   content: sentence.text,
   key: sentence.id,
@@ -22,7 +30,7 @@ const createHighlightSegment = (sentence: SentenceWithPosition): TextSegment => 
 
 export const createHighlightSegments = (
   text: string,
-  sentences: SentenceWithPosition[],
+  sentences: SentenceWithIndices[],
 ): TextSegment[] => {
   const segments: TextSegment[] = [];
   let cursor = 0;
