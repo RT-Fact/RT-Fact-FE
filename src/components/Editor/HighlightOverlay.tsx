@@ -1,6 +1,7 @@
 import type { Ref } from "react";
 
 import type { Sentence } from "@/types/sentence";
+import { isClaim } from "@/types/sentence";
 import { calculateIndices } from "@/utils/calculateIndices";
 import { createHighlightSegments } from "@/utils/createHighlightSegments";
 
@@ -14,7 +15,9 @@ interface HighlightOverlayProps {
 }
 
 const HighlightOverlay = ({ text, sentences, onHighlightClick, ref }: HighlightOverlayProps) => {
-  const sentencesWithIndices = calculateIndices(text, sentences);
+  // "무시됨" 상태의 문장은 하이라이트에서 제외 (plain text로 표시)
+  const activeSentences = sentences.filter((s) => !(isClaim(s) && s.status === "ignored"));
+  const sentencesWithIndices = calculateIndices(text, activeSentences);
   const segments = createHighlightSegments(text, sentencesWithIndices);
 
   return (

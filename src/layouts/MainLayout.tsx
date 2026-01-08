@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 
 export const MainLayout = () => {
   return (
-    <div className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-background font-sans text-foreground antialiased">
       <Header />
       <main className="flex min-h-0 flex-1 flex-col">
         <Outlet />
