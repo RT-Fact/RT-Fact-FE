@@ -74,7 +74,7 @@ export const mockSentences: Sentence[] = [
     verdict: "TRUE",
     sources: [{ title: "OpenAI Research Blog", url: "https://openai.com/research" }],
     suggestion: null,
-    status: "applied",
+    status: "pending",
   },
   {
     id: "sentence-7",
@@ -109,7 +109,7 @@ export const mockSentences: Sentence[] = [
     ],
     suggestion:
       "비타민 C는 감기 예방에 뚜렷한 효과가 없으며, 증상 지속 기간을 약간 줄일 수 있습니다.",
-    status: "ignored",
+    status: "pending",
   },
   {
     id: "sentence-10",
@@ -160,7 +160,7 @@ export const mockSentences: Sentence[] = [
     verdict: "TRUE",
     sources: [{ title: "Scientific American", url: "https://scientificamerican.com/coffee" }],
     suggestion: null,
-    status: "applied",
+    status: "pending",
   },
   {
     id: "sentence-15",
@@ -261,7 +261,7 @@ export const mockSentences: Sentence[] = [
     verdict: "FALSE",
     sources: [{ title: "NASA - Earth", url: "https://nasa.gov/earth" }],
     suggestion: "지구는 둥글다는 것이 과학적으로 증명되었습니다.",
-    status: "applied",
+    status: "pending",
   },
   {
     id: "sentence-25",

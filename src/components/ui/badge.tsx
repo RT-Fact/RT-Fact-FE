@@ -16,6 +16,11 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline: "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+        // Fact Check Verdict Variants
+        "verdict-true": "border-transparent bg-green-100 text-green-600 hover:bg-green-100/80",
+        "verdict-false": "border-transparent bg-red-100 text-red-600 hover:bg-red-100/80",
+        "verdict-applied": "border-transparent bg-green-500 text-green-100 hover:bg-green-500/80",
+        "verdict-ignored": "border-transparent bg-gray-200 text-gray-600 hover:bg-gray-200/80",
       },
     },
     defaultVariants: {

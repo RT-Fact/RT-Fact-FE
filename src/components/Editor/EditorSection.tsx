@@ -9,22 +9,29 @@ import type { Sentence } from "@/types/sentence";
 
 import EditorContainer from "./EditorContainer";
 
-const EditorSection = () => {
-  const [text, setText] = useState<string>("");
-  const [sentences, setSentences] = useState<Sentence[]>([]);
+interface EditorSectionProps {
+  text: string;
+  onTextChange: (text: string) => void;
+  sentences: Sentence[];
+  onSubmit: (sentences: Sentence[]) => void;
+}
+
+const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectionProps) => {
   const [isChecking, setIsChecking] = useState<boolean>(false);
 
   // TODO(REMOVE): API 연동 후 삭제 - 샘플 버튼 핸들러
   const handleSample = () => {
-    setText(mockEditorText);
-    setSentences([]);
+    onTextChange(mockEditorText);
+    // 샘플 텍스트 로드 시에는 결과 초기화
+    onSubmit([]);
   };
 
   const handleCheck = () => {
     setIsChecking(true);
     // TODO(FE-14): POST /factcheck API 연동
     setTimeout(() => {
-      setSentences(mockSentences);
+      // 결과를 상위 컴포넌트로 전달
+      onSubmit(mockSentences);
       setIsChecking(false);
     }, 1000);
   };
@@ -75,7 +82,7 @@ const EditorSection = () => {
       <div className="m-4 flex min-h-0 flex-1 flex-col">
         <EditorContainer
           text={text}
-          onTextChange={setText}
+          onTextChange={onTextChange}
           placeholder="팩트체크할 텍스트를 입력하거나 붙여넣기 하세요..."
           disabled={isChecking}
           sentences={sentences}
