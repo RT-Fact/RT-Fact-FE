@@ -1,7 +1,7 @@
 import { useState } from "react";
 
+import { AnalyzePanel } from "@/components/Analyze/AnalyzePanel";
 import EditorSection from "@/components/Editor/EditorSection";
-import { ResultsSection } from "@/components/Results/ResultsSection";
 import type { Sentence } from "@/types/sentence";
 import { isClaim } from "@/types/sentence";
 import { calculateIndices } from "@/utils/calculateIndices";
@@ -72,7 +72,7 @@ export const HomePage = () => {
 
       {/* Results/History Column */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-l border-border lg:w-[40%] lg:flex-none">
-        <ResultsSection sentences={sentences} onApply={handleApply} onIgnore={handleIgnore} />
+        <AnalyzePanel sentences={sentences} onApply={handleApply} onIgnore={handleIgnore} />
       </div>
     </div>
   );
