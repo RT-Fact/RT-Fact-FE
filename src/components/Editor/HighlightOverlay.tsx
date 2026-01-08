@@ -1,7 +1,6 @@
 import type { Ref } from "react";
 
-import type { Sentence } from "@/types/sentence";
-import { isClaim } from "@/types/sentence";
+import { type Sentence, isClaim } from "@/types/sentence";
 import { calculateIndices } from "@/utils/calculateIndices";
 import { createHighlightSegments } from "@/utils/createHighlightSegments";
 

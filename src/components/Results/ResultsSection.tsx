@@ -21,8 +21,8 @@ import { isClaim, isOpinion } from "@/types/sentence";
 
 interface ResultsSectionProps {
   sentences: Sentence[];
-  onApply?: (id: string) => void;
-  onIgnore?: (id: string) => void;
+  onApply: (id: string) => void;
+  onIgnore: (id: string) => void;
 }
 
 type TabType = "results" | "history";
@@ -221,7 +221,7 @@ export const ResultsSection = ({ sentences, onApply, onIgnore }: ResultsSectionP
                               <div className="flex items-center gap-2 pt-2">
                                 <Button
                                   className="flex-1 gap-2 bg-green-500 text-white hover:bg-green-600"
-                                  onClick={() => onApply?.(sentence.id)}
+                                  onClick={() => onApply(sentence.id)}
                                 >
                                   <RefreshCw className="size-4" />
                                   수정 적용
@@ -229,7 +229,7 @@ export const ResultsSection = ({ sentences, onApply, onIgnore }: ResultsSectionP
                                 <Button
                                   variant="outline"
                                   className="gap-1.5"
-                                  onClick={() => onIgnore?.(sentence.id)}
+                                  onClick={() => onIgnore(sentence.id)}
                                 >
                                   <X className="size-4" />
                                   무시

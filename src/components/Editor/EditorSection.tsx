@@ -13,7 +13,7 @@ interface EditorSectionProps {
   text: string;
   onTextChange: (text: string) => void;
   sentences: Sentence[];
-  onSubmit?: (sentences: Sentence[]) => void;
+  onSubmit: (sentences: Sentence[]) => void;
 }
 
 const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectionProps) => {
@@ -23,7 +23,7 @@ const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectio
   const handleSample = () => {
     onTextChange(mockEditorText);
     // 샘플 텍스트 로드 시에는 결과 초기화
-    onSubmit?.([]);
+    onSubmit([]);
   };
 
   const handleCheck = () => {
@@ -31,7 +31,7 @@ const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectio
     // TODO(FE-14): POST /factcheck API 연동
     setTimeout(() => {
       // 결과를 상위 컴포넌트로 전달
-      onSubmit?.(mockSentences);
+      onSubmit(mockSentences);
       setIsChecking(false);
     }, 1000);
   };
