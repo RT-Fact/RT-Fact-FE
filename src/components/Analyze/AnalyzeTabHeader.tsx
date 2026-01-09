@@ -9,7 +9,7 @@ interface AnalyzeTabHeaderProps {
   onTabChange: (tab: TabType) => void;
 }
 
-export const AnalyzeTabHeader = ({ activeTab, onTabChange }: AnalyzeTabHeaderProps) => {
+const AnalyzeTabHeader = ({ activeTab, onTabChange }: AnalyzeTabHeaderProps) => {
   return (
     <div className="flex h-14 shrink-0 border-b border-border">
       <button
@@ -39,3 +39,5 @@ export const AnalyzeTabHeader = ({ activeTab, onTabChange }: AnalyzeTabHeaderPro
     </div>
   );
 };
+
+export default AnalyzeTabHeader;

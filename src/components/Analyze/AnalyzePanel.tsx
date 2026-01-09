@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { type Ref, useState } from "react";
 
 import type { Sentence } from "@/types/sentence";
 
-import { AnalyzeTabHeader } from "./AnalyzeTabHeader";
-import { HistoryPanel } from "./HistoryPanel";
-import { ResultsPanel } from "./ResultsPanel";
+import AnalyzeTabHeader from "./AnalyzeTabHeader";
+import HistoryPanel from "./HistoryPanel";
+import ResultsPanel, { type ResultsPanelHandle } from "./ResultsPanel";
 
 type TabType = "results" | "history";
 
@@ -12,9 +12,19 @@ interface AnalyzePanelProps {
   sentences: Sentence[];
   onApply: (id: string) => void;
   onIgnore: (id: string) => void;
+  activeSentenceId: string | null;
+  onCardClick: (id: string) => void;
+  ref: Ref<ResultsPanelHandle>;
 }
 
-export const AnalyzePanel = ({ sentences, onApply, onIgnore }: AnalyzePanelProps) => {
+const AnalyzePanel = ({
+  sentences,
+  onApply,
+  onIgnore,
+  activeSentenceId,
+  onCardClick,
+  ref,
+}: AnalyzePanelProps) => {
   const [activeTab, setActiveTab] = useState<TabType>("results");
 
   return (
@@ -25,7 +35,14 @@ export const AnalyzePanel = ({ sentences, onApply, onIgnore }: AnalyzePanelProps
         <div className="flex overflow-y-auto h-full">
           <div className="flex min-h-0 flex-1 flex-col">
             {activeTab === "results" ? (
-              <ResultsPanel sentences={sentences} onApply={onApply} onIgnore={onIgnore} />
+              <ResultsPanel
+                ref={ref}
+                sentences={sentences}
+                onApply={onApply}
+                onIgnore={onIgnore}
+                activeSentenceId={activeSentenceId}
+                onCardClick={onCardClick}
+              />
             ) : (
               <HistoryPanel />
             )}
@@ -35,3 +52,5 @@ export const AnalyzePanel = ({ sentences, onApply, onIgnore }: AnalyzePanelProps
     </div>
   );
 };
+
+export default AnalyzePanel;

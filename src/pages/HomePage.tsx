@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-import { AnalyzePanel } from "@/components/Analyze/AnalyzePanel";
+import AnalyzePanel from "@/components/Analyze/AnalyzePanel";
+import type { ResultsPanelHandle } from "@/components/Analyze/ResultsPanel";
+import type { EditorContainerHandle } from "@/components/Editor/EditorContainer";
 import EditorSection from "@/components/Editor/EditorSection";
 import type { Sentence } from "@/types/sentence";
 import { isClaim } from "@/types/sentence";
@@ -9,6 +11,10 @@ import { calculateIndices } from "@/utils/calculateIndices";
 export const HomePage = () => {
   const [text, setText] = useState<string>("");
   const [sentences, setSentences] = useState<Sentence[]>([]);
+  const [activeSentenceId, setActiveSentenceId] = useState<string | null>(null);
+
+  const editorRef = useRef<EditorContainerHandle>(null);
+  const panelRef = useRef<ResultsPanelHandle>(null);
 
   const handleSubmit = (newSentences: Sentence[]) => {
     setSentences(newSentences);
@@ -58,21 +64,47 @@ export const HomePage = () => {
     );
   };
 
+  // 에디터 하이라이트 클릭 → 패널 카드로 스크롤
+  const handleHighlightClick = (id: string) => {
+    setActiveSentenceId(id);
+    if (panelRef.current) {
+      panelRef.current.scrollToCard(id);
+    }
+  };
+
+  // 패널 카드 클릭 → 에디터 문장으로 스크롤
+  const handleCardClick = (id: string) => {
+    setActiveSentenceId(id);
+    if (editorRef.current) {
+      editorRef.current.scrollToSentence(id);
+    }
+  };
+
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col lg:flex-row">
       {/* Editor Column */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:w-[60%]">
         <EditorSection
+          ref={editorRef}
           text={text}
           onTextChange={setText}
           sentences={sentences}
           onSubmit={handleSubmit}
+          activeSentenceId={activeSentenceId}
+          onHighlightClick={handleHighlightClick}
         />
       </div>
 
       {/* Results/History Column */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-l border-border lg:w-[40%] lg:flex-none">
-        <AnalyzePanel sentences={sentences} onApply={handleApply} onIgnore={handleIgnore} />
+        <AnalyzePanel
+          ref={panelRef}
+          sentences={sentences}
+          onApply={handleApply}
+          onIgnore={handleIgnore}
+          activeSentenceId={activeSentenceId}
+          onCardClick={handleCardClick}
+        />
       </div>
     </div>
   );

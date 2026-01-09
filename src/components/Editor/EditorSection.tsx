@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type Ref, useState } from "react";
 
 import { FileText, Loader2, Search, Sparkles } from "lucide-react";
 
@@ -7,16 +7,27 @@ import { Button } from "@/components/ui/button";
 import { mockEditorText, mockSentences } from "@/mocks/sentences";
 import type { Sentence } from "@/types/sentence";
 
-import EditorContainer from "./EditorContainer";
+import EditorContainer, { type EditorContainerHandle } from "./EditorContainer";
 
 interface EditorSectionProps {
   text: string;
   onTextChange: (text: string) => void;
   sentences: Sentence[];
   onSubmit: (sentences: Sentence[]) => void;
+  activeSentenceId: string | null;
+  onHighlightClick: (id: string) => void;
+  ref: Ref<EditorContainerHandle>;
 }
 
-const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectionProps) => {
+const EditorSection = ({
+  text,
+  onTextChange,
+  sentences,
+  onSubmit,
+  activeSentenceId,
+  onHighlightClick,
+  ref,
+}: EditorSectionProps) => {
   const [isChecking, setIsChecking] = useState<boolean>(false);
 
   // TODO(REMOVE): API 연동 후 삭제 - 샘플 버튼 핸들러
@@ -30,15 +41,9 @@ const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectio
     setIsChecking(true);
     // TODO(FE-14): POST /factcheck API 연동
     setTimeout(() => {
-      // 결과를 상위 컴포넌트로 전달
       onSubmit(mockSentences);
       setIsChecking(false);
     }, 1000);
-  };
-
-  const handleHighlightClick = (sentenceId: string) => {
-    console.log("Clicked sentence:", sentenceId);
-    // TODO(FE-06): 결과 패널 카드 활성화
   };
 
   return (
@@ -52,6 +57,7 @@ const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectio
           </div>
           {text.length > 0 && (
             <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+              {/* 아래는 총 글자 수를 지정하는 문구이므로 "자" 삭제하지 말 것 */}
               {text.length.toLocaleString()}자
             </span>
           )}
@@ -81,12 +87,14 @@ const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectio
       {/* 에디터 */}
       <div className="m-4 flex min-h-0 flex-1 flex-col">
         <EditorContainer
+          ref={ref}
           text={text}
           onTextChange={onTextChange}
           placeholder="팩트체크할 텍스트를 입력하거나 붙여넣기 하세요..."
           disabled={isChecking}
           sentences={sentences}
-          onHighlightClick={handleHighlightClick}
+          onHighlightClick={onHighlightClick}
+          activeSentenceId={activeSentenceId}
         />
       </div>
     </div>

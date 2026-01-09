@@ -1,22 +1,35 @@
+import type { Ref } from "react";
+
 import type { SentenceWithIndices } from "@/types/sentence";
 import { isClaim } from "@/types/sentence";
 
 const HIGHLIGHT_CLASS = {
-  TRUE: "highlight-true",
-  FALSE: "highlight-false",
-  opinion: "highlight-opinion",
+  default: {
+    TRUE: "highlight-true",
+    FALSE: "highlight-false",
+    opinion: "highlight-opinion",
+  },
+  active: {
+    TRUE: "highlight-true-active",
+    FALSE: "highlight-false-active",
+    opinion: "highlight-opinion-active",
+  },
 } as const;
 
 interface HighlightSpanProps {
   sentence: SentenceWithIndices;
   onClick: (id: string) => void;
+  isActive: boolean;
+  ref: Ref<HTMLSpanElement>;
 }
 
-const HighlightSpan = ({ sentence, onClick }: HighlightSpanProps) => {
-  const className = isClaim(sentence) ? HIGHLIGHT_CLASS[sentence.verdict] : HIGHLIGHT_CLASS.opinion;
+const HighlightSpan = ({ sentence, onClick, isActive, ref }: HighlightSpanProps) => {
+  const key = isClaim(sentence) ? sentence.verdict : "opinion";
+  const state = isActive ? "active" : "default";
+  const className = HIGHLIGHT_CLASS[state][key];
 
   return (
-    <span className={className} onClick={() => onClick(sentence.id)}>
+    <span ref={ref} id={sentence.id} className={className} onClick={() => onClick(sentence.id)}>
       {sentence.text}
     </span>
   );
