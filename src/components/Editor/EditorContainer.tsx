@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import type { Sentence } from "@/types/sentence";
 
@@ -12,6 +12,7 @@ interface EditorContainerProps {
   disabled?: boolean;
   sentences: Sentence[];
   onHighlightClick: (id: string) => void;
+  activeSentenceId: string | null;
 }
 
 const EditorContainer = ({
@@ -21,6 +22,7 @@ const EditorContainer = ({
   disabled,
   sentences,
   onHighlightClick,
+  activeSentenceId,
 }: EditorContainerProps) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -30,6 +32,19 @@ const EditorContainer = ({
       overlayRef.current.scrollTop = textareaRef.current.scrollTop;
     }
   };
+
+  // 패널에서 카드 클릭 시 에디터 스크롤
+  useEffect(() => {
+    if (!activeSentenceId || !overlayRef.current || !textareaRef.current) return;
+
+    const targetSpan = overlayRef.current.querySelector(`#${activeSentenceId}`);
+    if (targetSpan instanceof HTMLElement) {
+      textareaRef.current.scrollTo({
+        top: targetSpan.offsetTop,
+        behavior: "smooth",
+      });
+    }
+  }, [activeSentenceId]);
 
   return (
     <div

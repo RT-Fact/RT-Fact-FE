@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 import {
   CheckCircle2,
   ExternalLink,
@@ -19,6 +21,8 @@ interface ResultsPanelProps {
   sentences: Sentence[];
   onApply: (id: string) => void;
   onIgnore: (id: string) => void;
+  activeSentenceId: string | null;
+  onCardClick: (id: string) => void;
 }
 
 const VERDICT_STYLES = {
@@ -58,7 +62,25 @@ const getClaimStyle = (sentence: ClaimSentence) => {
   return VERDICT_STYLES[sentence.verdict];
 };
 
-const ResultsPanel = ({ sentences, onApply, onIgnore }: ResultsPanelProps) => {
+const ResultsPanel = ({
+  sentences,
+  onApply,
+  onIgnore,
+  activeSentenceId,
+  onCardClick,
+}: ResultsPanelProps) => {
+  const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  // 에디터 하이라이트 클릭 시 해당 카드로 스크롤
+  useEffect(() => {
+    if (activeSentenceId) {
+      const card = cardRefs.current.get(activeSentenceId);
+      if (card) {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [activeSentenceId]);
+
   const stats = {
     true: sentences.filter((s) => isClaim(s) && s.verdict === "TRUE").length,
     false: sentences.filter((s) => isClaim(s) && s.verdict === "FALSE").length,
@@ -122,8 +144,16 @@ const ResultsPanel = ({ sentences, onApply, onIgnore }: ResultsPanelProps) => {
             return (
               <Card
                 key={sentence.id}
+                ref={(el) => {
+                  if (el) cardRefs.current.set(sentence.id, el);
+                  else cardRefs.current.delete(sentence.id);
+                }}
                 variant={style.cardVariant}
-                className="flex flex-col gap-4 transition-all duration-300"
+                className={cn(
+                  "flex flex-col gap-4 transition-all duration-300 cursor-pointer",
+                  activeSentenceId === sentence.id && "ring-2 ring-primary",
+                )}
+                onClick={() => onCardClick(sentence.id)}
               >
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-2">
@@ -198,7 +228,19 @@ const ResultsPanel = ({ sentences, onApply, onIgnore }: ResultsPanelProps) => {
 
           if (isOpinion(sentence)) {
             return (
-              <Card key={sentence.id} variant="opinion" className="flex flex-col gap-4">
+              <Card
+                key={sentence.id}
+                ref={(el) => {
+                  if (el) cardRefs.current.set(sentence.id, el);
+                  else cardRefs.current.delete(sentence.id);
+                }}
+                variant="opinion"
+                className={cn(
+                  "flex flex-col gap-4 cursor-pointer",
+                  activeSentenceId === sentence.id && "ring-2 ring-primary",
+                )}
+                onClick={() => onCardClick(sentence.id)}
+              >
                 <div className="flex items-center gap-2">
                   <MessageSquare className="size-5 text-blue-500" />
                   <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-sm font-medium text-blue-600">

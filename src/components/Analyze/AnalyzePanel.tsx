@@ -12,9 +12,17 @@ interface AnalyzePanelProps {
   sentences: Sentence[];
   onApply: (id: string) => void;
   onIgnore: (id: string) => void;
+  activeSentenceId: string | null;
+  onCardClick: (id: string) => void;
 }
 
-const AnalyzePanel = ({ sentences, onApply, onIgnore }: AnalyzePanelProps) => {
+const AnalyzePanel = ({
+  sentences,
+  onApply,
+  onIgnore,
+  activeSentenceId,
+  onCardClick,
+}: AnalyzePanelProps) => {
   const [activeTab, setActiveTab] = useState<TabType>("results");
 
   return (
@@ -25,7 +33,13 @@ const AnalyzePanel = ({ sentences, onApply, onIgnore }: AnalyzePanelProps) => {
         <div className="flex overflow-y-auto h-full">
           <div className="flex min-h-0 flex-1 flex-col">
             {activeTab === "results" ? (
-              <ResultsPanel sentences={sentences} onApply={onApply} onIgnore={onIgnore} />
+              <ResultsPanel
+                sentences={sentences}
+                onApply={onApply}
+                onIgnore={onIgnore}
+                activeSentenceId={activeSentenceId}
+                onCardClick={onCardClick}
+              />
             ) : (
               <HistoryPanel />
             )}

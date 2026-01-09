@@ -9,6 +9,7 @@ import { calculateIndices } from "@/utils/calculateIndices";
 export const HomePage = () => {
   const [text, setText] = useState<string>("");
   const [sentences, setSentences] = useState<Sentence[]>([]);
+  const [activeSentenceId, setActiveSentenceId] = useState<string | null>(null);
 
   const handleSubmit = (newSentences: Sentence[]) => {
     setSentences(newSentences);
@@ -58,6 +59,16 @@ export const HomePage = () => {
     );
   };
 
+  // 에디터 하이라이트 클릭 → 패널 카드로 스크롤
+  const handleHighlightClick = (id: string) => {
+    setActiveSentenceId(id);
+  };
+
+  // 패널 카드 클릭 → 에디터 문장으로 스크롤
+  const handleCardClick = (id: string) => {
+    setActiveSentenceId(id);
+  };
+
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col lg:flex-row">
       {/* Editor Column */}
@@ -67,12 +78,20 @@ export const HomePage = () => {
           onTextChange={setText}
           sentences={sentences}
           onSubmit={handleSubmit}
+          activeSentenceId={activeSentenceId}
+          onHighlightClick={handleHighlightClick}
         />
       </div>
 
       {/* Results/History Column */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-l border-border lg:w-[40%] lg:flex-none">
-        <AnalyzePanel sentences={sentences} onApply={handleApply} onIgnore={handleIgnore} />
+        <AnalyzePanel
+          sentences={sentences}
+          onApply={handleApply}
+          onIgnore={handleIgnore}
+          activeSentenceId={activeSentenceId}
+          onCardClick={handleCardClick}
+        />
       </div>
     </div>
   );

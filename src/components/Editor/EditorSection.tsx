@@ -14,9 +14,18 @@ interface EditorSectionProps {
   onTextChange: (text: string) => void;
   sentences: Sentence[];
   onSubmit: (sentences: Sentence[]) => void;
+  activeSentenceId: string | null;
+  onHighlightClick: (id: string) => void;
 }
 
-const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectionProps) => {
+const EditorSection = ({
+  text,
+  onTextChange,
+  sentences,
+  onSubmit,
+  activeSentenceId,
+  onHighlightClick,
+}: EditorSectionProps) => {
   const [isChecking, setIsChecking] = useState<boolean>(false);
 
   // TODO(REMOVE): API 연동 후 삭제 - 샘플 버튼 핸들러
@@ -34,11 +43,6 @@ const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectio
       onSubmit(mockSentences);
       setIsChecking(false);
     }, 1000);
-  };
-
-  const handleHighlightClick = (sentenceId: string) => {
-    console.log("Clicked sentence:", sentenceId);
-    // TODO(FE-06): 결과 패널 카드 활성화
   };
 
   return (
@@ -86,7 +90,8 @@ const EditorSection = ({ text, onTextChange, sentences, onSubmit }: EditorSectio
           placeholder="팩트체크할 텍스트를 입력하거나 붙여넣기 하세요..."
           disabled={isChecking}
           sentences={sentences}
-          onHighlightClick={handleHighlightClick}
+          onHighlightClick={onHighlightClick}
+          activeSentenceId={activeSentenceId}
         />
       </div>
     </div>
