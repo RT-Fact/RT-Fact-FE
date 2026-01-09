@@ -13,6 +13,7 @@ interface HighlightOverlayProps {
   activeSentenceId: string | null;
   onWheel: (e: WheelEvent<HTMLDivElement>) => void;
   ref: Ref<HTMLDivElement>;
+  onSpanRef: (id: string, node: HTMLSpanElement | null) => void;
 }
 
 const HighlightOverlay = ({
@@ -22,6 +23,7 @@ const HighlightOverlay = ({
   activeSentenceId,
   onWheel,
   ref,
+  onSpanRef,
 }: HighlightOverlayProps) => {
   // "무시됨" 상태의 문장은 하이라이트에서 제외 (plain text로 표시)
   const activeSentences = sentences.filter((s) => !(isClaim(s) && s.status === "ignored"));
@@ -43,6 +45,7 @@ const HighlightOverlay = ({
             sentence={segment.sentence}
             onClick={onHighlightClick}
             isActive={segment.sentence.id === activeSentenceId}
+            ref={(node) => onSpanRef(segment.sentence.id, node)}
           />
         ),
       )}

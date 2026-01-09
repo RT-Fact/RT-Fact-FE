@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type Ref, useState } from "react";
 
 import { FileText, Loader2, Search, Sparkles } from "lucide-react";
 
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { mockEditorText, mockSentences } from "@/mocks/sentences";
 import type { Sentence } from "@/types/sentence";
 
-import EditorContainer from "./EditorContainer";
+import EditorContainer, { type EditorContainerHandle } from "./EditorContainer";
 
 interface EditorSectionProps {
   text: string;
@@ -16,6 +16,7 @@ interface EditorSectionProps {
   onSubmit: (sentences: Sentence[]) => void;
   activeSentenceId: string | null;
   onHighlightClick: (id: string) => void;
+  ref: Ref<EditorContainerHandle>;
 }
 
 const EditorSection = ({
@@ -25,6 +26,7 @@ const EditorSection = ({
   onSubmit,
   activeSentenceId,
   onHighlightClick,
+  ref,
 }: EditorSectionProps) => {
   const [isChecking, setIsChecking] = useState<boolean>(false);
 
@@ -85,6 +87,7 @@ const EditorSection = ({
       {/* 에디터 */}
       <div className="m-4 flex min-h-0 flex-1 flex-col">
         <EditorContainer
+          ref={ref}
           text={text}
           onTextChange={onTextChange}
           placeholder="팩트체크할 텍스트를 입력하거나 붙여넣기 하세요..."

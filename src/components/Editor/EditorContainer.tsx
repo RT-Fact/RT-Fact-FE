@@ -1,9 +1,13 @@
-import { type WheelEvent, useEffect, useRef } from "react";
+import { type Ref, type WheelEvent, useImperativeHandle, useRef } from "react";
 
 import type { Sentence } from "@/types/sentence";
 
 import EditorTextarea from "./EditorTextarea";
 import HighlightOverlay from "./HighlightOverlay";
+
+export interface EditorContainerHandle {
+  scrollToSentence: (id: string) => void;
+}
 
 interface EditorContainerProps {
   text: string;
@@ -13,6 +17,7 @@ interface EditorContainerProps {
   sentences: Sentence[];
   onHighlightClick: (id: string) => void;
   activeSentenceId: string | null;
+  ref: Ref<EditorContainerHandle>;
 }
 
 const EditorContainer = ({
@@ -23,9 +28,26 @@ const EditorContainer = ({
   sentences,
   onHighlightClick,
   activeSentenceId,
+  ref,
 }: EditorContainerProps) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const spanRefs = useRef<Map<string, HTMLSpanElement>>(new Map());
+
+  useImperativeHandle(ref, () => ({
+    scrollToSentence: (id: string) => {
+      if (!textareaRef.current) return;
+
+      const targetSpan = spanRefs.current.get(id);
+
+      if (targetSpan) {
+        textareaRef.current.scrollTo({
+          top: targetSpan.offsetTop,
+          behavior: "smooth",
+        });
+      }
+    },
+  }));
 
   const handleScroll = () => {
     if (overlayRef.current && textareaRef.current) {
@@ -41,18 +63,13 @@ const EditorContainer = ({
     }
   };
 
-  // 패널에서 카드 클릭 시 에디터 스크롤
-  useEffect(() => {
-    if (!activeSentenceId || !overlayRef.current || !textareaRef.current) return;
-
-    const targetSpan = overlayRef.current.querySelector(`#${activeSentenceId}`);
-    if (targetSpan instanceof HTMLElement) {
-      textareaRef.current.scrollTo({
-        top: targetSpan.offsetTop,
-        behavior: "smooth",
-      });
+  const handleSpanRef = (id: string, node: HTMLSpanElement | null) => {
+    if (node) {
+      spanRefs.current.set(id, node);
+    } else {
+      spanRefs.current.delete(id);
     }
-  }, [activeSentenceId]);
+  };
 
   return (
     <div
@@ -71,6 +88,7 @@ const EditorContainer = ({
         onHighlightClick={onHighlightClick}
         activeSentenceId={activeSentenceId}
         onWheel={handleWheel}
+        onSpanRef={handleSpanRef}
       />
       <EditorTextarea
         ref={textareaRef}

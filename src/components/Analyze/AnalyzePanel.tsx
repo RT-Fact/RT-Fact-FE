@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { type Ref, useState } from "react";
 
 import type { Sentence } from "@/types/sentence";
 
 import AnalyzeTabHeader from "./AnalyzeTabHeader";
 import HistoryPanel from "./HistoryPanel";
-import ResultsPanel from "./ResultsPanel";
+import ResultsPanel, { type ResultsPanelHandle } from "./ResultsPanel";
 
 type TabType = "results" | "history";
 
@@ -14,6 +14,7 @@ interface AnalyzePanelProps {
   onIgnore: (id: string) => void;
   activeSentenceId: string | null;
   onCardClick: (id: string) => void;
+  ref: Ref<ResultsPanelHandle>;
 }
 
 const AnalyzePanel = ({
@@ -22,6 +23,7 @@ const AnalyzePanel = ({
   onIgnore,
   activeSentenceId,
   onCardClick,
+  ref,
 }: AnalyzePanelProps) => {
   const [activeTab, setActiveTab] = useState<TabType>("results");
 
@@ -34,6 +36,7 @@ const AnalyzePanel = ({
           <div className="flex min-h-0 flex-1 flex-col">
             {activeTab === "results" ? (
               <ResultsPanel
+                ref={ref}
                 sentences={sentences}
                 onApply={onApply}
                 onIgnore={onIgnore}

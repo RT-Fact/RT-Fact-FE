@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { type Ref, useImperativeHandle, useRef } from "react";
 
 import {
   CheckCircle2,
@@ -17,12 +17,17 @@ import { cn } from "@/lib/utils";
 import type { ClaimSentence, Sentence } from "@/types/sentence";
 import { isClaim, isOpinion } from "@/types/sentence";
 
+export interface ResultsPanelHandle {
+  scrollToCard: (id: string) => void;
+}
+
 interface ResultsPanelProps {
   sentences: Sentence[];
   onApply: (id: string) => void;
   onIgnore: (id: string) => void;
   activeSentenceId: string | null;
   onCardClick: (id: string) => void;
+  ref: Ref<ResultsPanelHandle>;
 }
 
 const VERDICT_STYLES = {
@@ -68,18 +73,18 @@ const ResultsPanel = ({
   onIgnore,
   activeSentenceId,
   onCardClick,
+  ref,
 }: ResultsPanelProps) => {
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  // 에디터 하이라이트 클릭 시 해당 카드로 스크롤
-  useEffect(() => {
-    if (activeSentenceId) {
-      const card = cardRefs.current.get(activeSentenceId);
+  useImperativeHandle(ref, () => ({
+    scrollToCard: (id: string) => {
+      const card = cardRefs.current.get(id);
       if (card) {
         card.scrollIntoView({ behavior: "smooth", block: "center" });
       }
-    }
-  }, [activeSentenceId]);
+    },
+  }));
 
   const stats = {
     true: sentences.filter((s) => isClaim(s) && s.verdict === "TRUE").length,
