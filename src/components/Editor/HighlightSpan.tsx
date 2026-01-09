@@ -1,11 +1,17 @@
-// Tailwind safelist: highlight-true-active highlight-false-active highlight-opinion-active
 import type { SentenceWithIndices } from "@/types/sentence";
 import { isClaim } from "@/types/sentence";
 
 const HIGHLIGHT_CLASS = {
-  TRUE: "highlight-true",
-  FALSE: "highlight-false",
-  opinion: "highlight-opinion",
+  default: {
+    TRUE: "highlight-true",
+    FALSE: "highlight-false",
+    opinion: "highlight-opinion",
+  },
+  active: {
+    TRUE: "highlight-true-active",
+    FALSE: "highlight-false-active",
+    opinion: "highlight-opinion-active",
+  },
 } as const;
 
 interface HighlightSpanProps {
@@ -15,9 +21,9 @@ interface HighlightSpanProps {
 }
 
 const HighlightSpan = ({ sentence, onClick, isActive }: HighlightSpanProps) => {
-  const baseClass = isClaim(sentence) ? HIGHLIGHT_CLASS[sentence.verdict] : HIGHLIGHT_CLASS.opinion;
-
-  const className = isActive ? `${baseClass}-active` : baseClass;
+  const key = isClaim(sentence) ? sentence.verdict : "opinion";
+  const state = isActive ? "active" : "default";
+  const className = HIGHLIGHT_CLASS[state][key];
 
   return (
     <span id={sentence.id} className={className} onClick={() => onClick(sentence.id)}>

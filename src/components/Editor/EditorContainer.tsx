@@ -28,11 +28,9 @@ const EditorContainer = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleScroll = () => {
-    requestAnimationFrame(() => {
-      if (overlayRef.current && textareaRef.current) {
-        overlayRef.current.scrollTop = textareaRef.current.scrollTop;
-      }
-    });
+    if (overlayRef.current && textareaRef.current) {
+      overlayRef.current.scrollTop = textareaRef.current.scrollTop;
+    }
   };
 
   // 오버레이에서 휠 스크롤 시 textarea로 전달

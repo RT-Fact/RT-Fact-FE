@@ -39,7 +39,6 @@ const EditorSection = ({
     setIsChecking(true);
     // TODO(FE-14): POST /factcheck API 연동
     setTimeout(() => {
-      // 결과를 상위 컴포넌트로 전달
       onSubmit(mockSentences);
       setIsChecking(false);
     }, 1000);
@@ -56,7 +55,7 @@ const EditorSection = ({
           </div>
           {text.length > 0 && (
             <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-              {text.length.toLocaleString()}자
+              {text.length.toLocaleString()}
             </span>
           )}
         </div>
