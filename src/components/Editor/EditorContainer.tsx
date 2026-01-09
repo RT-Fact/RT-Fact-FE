@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { type WheelEvent, useEffect, useRef } from "react";
 
 import type { Sentence } from "@/types/sentence";
 
@@ -28,8 +28,18 @@ const EditorContainer = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleScroll = () => {
-    if (overlayRef.current && textareaRef.current) {
-      overlayRef.current.scrollTop = textareaRef.current.scrollTop;
+    requestAnimationFrame(() => {
+      if (overlayRef.current && textareaRef.current) {
+        overlayRef.current.scrollTop = textareaRef.current.scrollTop;
+      }
+    });
+  };
+
+  // 오버레이에서 휠 스크롤 시 textarea로 전달
+  const handleWheel = (e: WheelEvent<HTMLDivElement>) => {
+    if (textareaRef.current) {
+      textareaRef.current.scrollTop += e.deltaY;
+      handleScroll(); // 오버레이도 동기화
     }
   };
 
@@ -61,6 +71,8 @@ const EditorContainer = ({
         text={text}
         sentences={sentences}
         onHighlightClick={onHighlightClick}
+        activeSentenceId={activeSentenceId}
+        onWheel={handleWheel}
       />
       <EditorTextarea
         ref={textareaRef}

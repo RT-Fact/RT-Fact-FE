@@ -145,36 +145,62 @@
   @apply absolute inset-0 overflow-auto;
   @apply font-editor text-editor leading-editor p-editor tracking-editor;
   @apply whitespace-pre-wrap wrap-break-word;
+  /* 스크롤바 숨기기 - overlay와 textarea의 clientWidth 일치 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+}
+
+@utility editor-overlay {
+  @apply editor-layer overflow-hidden;
 }
 
 /* Highlight styles - 팩트체크 결과 하이라이팅 (그라데이션 배경) */
 @utility highlight-base {
-  @apply rounded cursor-pointer pointer-events-auto;
+  @apply cursor-pointer pointer-events-auto;
   @apply transition-all duration-200;
+  display: inline;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
 
 @utility highlight-true {
   @apply highlight-base;
-  background: linear-gradient(to bottom, transparent 60%, var(--verdict-true-bg) 60%);
+  background: linear-gradient(to bottom, transparent 80%, var(--verdict-true-bg) 80%);
   &:hover {
-    background: linear-gradient(to bottom, transparent 50%, var(--verdict-true-bg-hover) 50%);
+    background: linear-gradient(to bottom, transparent 70%, var(--verdict-true-bg-hover) 70%);
   }
 }
 
 @utility highlight-false {
   @apply highlight-base;
-  background: linear-gradient(to bottom, transparent 60%, var(--verdict-false-bg) 60%);
+  background: linear-gradient(to bottom, transparent 80%, var(--verdict-false-bg) 80%);
   &:hover {
-    background: linear-gradient(to bottom, transparent 50%, var(--verdict-false-bg-hover) 50%);
+    background: linear-gradient(to bottom, transparent 70%, var(--verdict-false-bg-hover) 70%);
   }
 }
 
 @utility highlight-opinion {
   @apply highlight-base;
-  background: linear-gradient(to bottom, transparent 60%, var(--verdict-opinion-bg) 60%);
+  background: linear-gradient(to bottom, transparent 80%, var(--verdict-opinion-bg) 80%);
   &:hover {
-    background: linear-gradient(to bottom, transparent 50%, var(--verdict-opinion-bg-hover) 50%);
+    background: linear-gradient(to bottom, transparent 70%, var(--verdict-opinion-bg-hover) 70%);
   }
+}
+
+@utility highlight-true-active {
+  @apply highlight-base;
+  background: linear-gradient(to bottom, transparent 0%, var(--verdict-true-bg) 0%);
+}
+
+@utility highlight-false-active {
+  @apply highlight-base;
+  background: linear-gradient(to bottom, transparent 0%, var(--verdict-false-bg) 0%);
+}
+
+@utility highlight-opinion-active {
+  @apply highlight-base;
+  background: linear-gradient(to bottom, transparent 0%, var(--verdict-opinion-bg) 0%);
 }
