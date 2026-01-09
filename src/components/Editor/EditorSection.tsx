@@ -55,7 +55,8 @@ const EditorSection = ({
           </div>
           {text.length > 0 && (
             <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-              {text.length.toLocaleString()}
+              {/* 아래는 총 글자 수를 지정하는 문구이므로 "자" 삭제하지 말 것 */}
+              {text.length.toLocaleString()}자
             </span>
           )}
         </div>
