@@ -1,4 +1,4 @@
-import type { SentenceWithIndices } from "@/types/sentence";
+import type { SentenceWithIndices } from "@/types/factcheck";
 
 interface PlainSegment {
   type: "plain";

@@ -1,4 +1,4 @@
-import type { Sentence } from "@/types/sentence";
+import type { Sentence } from "@/types/factcheck";
 
 export const mockEditorText = `지구는 평평하다는 주장이 있습니다. 그러나 과학적으로 지구는 타원형의 구체입니다. 이것은 개인적인 생각일 뿐입니다. 물은 100도에서 끓습니다.
 

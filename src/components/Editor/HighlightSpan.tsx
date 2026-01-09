@@ -1,7 +1,7 @@
 import type { Ref } from "react";
 
-import type { SentenceWithIndices } from "@/types/sentence";
-import { isClaim } from "@/types/sentence";
+import type { SentenceWithIndices } from "@/types/factcheck";
+import { isClaim } from "@/types/factcheck";
 
 const HIGHLIGHT_CLASS = {
   default: {

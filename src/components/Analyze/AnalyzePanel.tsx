@@ -1,6 +1,6 @@
 import { type Ref, useState } from "react";
 
-import type { Sentence } from "@/types/sentence";
+import type { Sentence } from "@/types/factcheck";
 
 import AnalyzeTabHeader from "./AnalyzeTabHeader";
 import HistoryPanel from "./HistoryPanel";

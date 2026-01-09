@@ -14,8 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { ClaimSentence, Sentence } from "@/types/sentence";
-import { isClaim, isOpinion } from "@/types/sentence";
+import type { ClaimSentence, Sentence } from "@/types/factcheck";
+import { isClaim, isOpinion } from "@/types/factcheck";
 
 export interface ResultsPanelHandle {
   scrollToCard: (id: string) => void;

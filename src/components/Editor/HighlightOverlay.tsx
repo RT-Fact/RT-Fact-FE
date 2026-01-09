@@ -1,6 +1,6 @@
 import type { Ref, WheelEvent } from "react";
 
-import { type Sentence, isClaim } from "@/types/sentence";
+import { type Sentence, isClaim } from "@/types/factcheck";
 import { calculateIndices } from "@/utils/calculateIndices";
 import { createHighlightSegments } from "@/utils/createHighlightSegments";
 

@@ -4,8 +4,9 @@ import AnalyzePanel from "@/components/Analyze/AnalyzePanel";
 import type { ResultsPanelHandle } from "@/components/Analyze/ResultsPanel";
 import type { EditorContainerHandle } from "@/components/Editor/EditorContainer";
 import EditorSection from "@/components/Editor/EditorSection";
-import type { Sentence } from "@/types/sentence";
-import { isClaim } from "@/types/sentence";
+import { useFactCheckMutation } from "@/hooks/mutations/useFactCheckMutation";
+import type { Sentence } from "@/types/factcheck";
+import { isClaim } from "@/types/factcheck";
 import { calculateIndices } from "@/utils/calculateIndices";
 
 export const HomePage = () => {
@@ -16,8 +17,24 @@ export const HomePage = () => {
   const editorRef = useRef<EditorContainerHandle>(null);
   const panelRef = useRef<ResultsPanelHandle>(null);
 
-  const handleSubmit = (newSentences: Sentence[]) => {
-    setSentences(newSentences);
+  const { mutate: submitFactCheck, isPending } = useFactCheckMutation();
+
+  const handleCheck = () => {
+    setSentences([]); // mutation 시작 시 이전 결과 초기화
+    submitFactCheck(text, {
+      onSuccess: (data) => {
+        setSentences(data.sentences);
+      },
+      onError: (error) => {
+        console.error(error);
+        // TODO: toast 구현 후 교체
+        alert("팩트체크 실패");
+      },
+    });
+  };
+
+  const handleClearSentences = () => {
+    setSentences([]);
   };
 
   const handleApply = (id: string) => {
@@ -89,7 +106,9 @@ export const HomePage = () => {
           text={text}
           onTextChange={setText}
           sentences={sentences}
-          onSubmit={handleSubmit}
+          onCheck={handleCheck}
+          isPending={isPending}
+          onClearSentences={handleClearSentences}
           activeSentenceId={activeSentenceId}
           onHighlightClick={handleHighlightClick}
         />
