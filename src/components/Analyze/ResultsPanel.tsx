@@ -58,7 +58,7 @@ const getClaimStyle = (sentence: ClaimSentence) => {
   return VERDICT_STYLES[sentence.verdict];
 };
 
-export const ResultsPanel = ({ sentences, onApply, onIgnore }: ResultsPanelProps) => {
+const ResultsPanel = ({ sentences, onApply, onIgnore }: ResultsPanelProps) => {
   const stats = {
     true: sentences.filter((s) => isClaim(s) && s.verdict === "TRUE").length,
     false: sentences.filter((s) => isClaim(s) && s.verdict === "FALSE").length,
@@ -219,3 +219,5 @@ export const ResultsPanel = ({ sentences, onApply, onIgnore }: ResultsPanelProps
     </div>
   );
 };
+
+export default ResultsPanel;

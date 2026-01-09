@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { AnalyzePanel } from "@/components/Analyze/AnalyzePanel";
+import AnalyzePanel from "@/components/Analyze/AnalyzePanel";
 import EditorSection from "@/components/Editor/EditorSection";
 import type { Sentence } from "@/types/sentence";
 import { isClaim } from "@/types/sentence";

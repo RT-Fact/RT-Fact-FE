@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import type { Sentence } from "@/types/sentence";
 
-import { AnalyzeTabHeader } from "./AnalyzeTabHeader";
-import { HistoryPanel } from "./HistoryPanel";
-import { ResultsPanel } from "./ResultsPanel";
+import AnalyzeTabHeader from "./AnalyzeTabHeader";
+import HistoryPanel from "./HistoryPanel";
+import ResultsPanel from "./ResultsPanel";
 
 type TabType = "results" | "history";
 
@@ -14,7 +14,7 @@ interface AnalyzePanelProps {
   onIgnore: (id: string) => void;
 }
 
-export const AnalyzePanel = ({ sentences, onApply, onIgnore }: AnalyzePanelProps) => {
+const AnalyzePanel = ({ sentences, onApply, onIgnore }: AnalyzePanelProps) => {
   const [activeTab, setActiveTab] = useState<TabType>("results");
 
   return (
@@ -35,3 +35,5 @@ export const AnalyzePanel = ({ sentences, onApply, onIgnore }: AnalyzePanelProps
     </div>
   );
 };
+
+export default AnalyzePanel;

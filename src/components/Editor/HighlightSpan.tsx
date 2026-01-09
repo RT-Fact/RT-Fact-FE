@@ -16,7 +16,7 @@ const HighlightSpan = ({ sentence, onClick }: HighlightSpanProps) => {
   const className = isClaim(sentence) ? HIGHLIGHT_CLASS[sentence.verdict] : HIGHLIGHT_CLASS.opinion;
 
   return (
-    <span className={className} onClick={() => onClick(sentence.id)}>
+    <span id={sentence.id} className={className} onClick={() => onClick(sentence.id)}>
       {sentence.text}
     </span>
   );
