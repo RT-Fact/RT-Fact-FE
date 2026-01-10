@@ -27,7 +27,7 @@ export const HomePage = () => {
   const { mutate: ignoreClaim } = useIgnoreClaimMutation();
 
   const handleCheck = () => {
-    setSentences([]); // mutation 시작 시 이전 결과 초기화
+    setSentences([]);
     submitFactCheck(text, {
       onSuccess: (data) => {
         setFactcheckId(data.id);
