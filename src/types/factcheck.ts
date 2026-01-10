@@ -51,6 +51,19 @@ export interface FactCheckResponse {
   createdAt: string;
 }
 
+export interface ApplyClaimResponse {
+  id: string;
+  status: "applied";
+  appliedText: string;
+  updatedAt: string;
+}
+
+export interface IgnoreClaimResponse {
+  id: string;
+  status: "ignored";
+  updatedAt: string;
+}
+
 export const isClaim = (sentence: Sentence): sentence is ClaimSentence => sentence.type === "claim";
 
 export const isOpinion = (sentence: Sentence): sentence is OpinionSentence =>
