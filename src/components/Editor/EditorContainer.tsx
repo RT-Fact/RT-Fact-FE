@@ -1,6 +1,6 @@
 import { type Ref, type WheelEvent, useImperativeHandle, useRef } from "react";
 
-import type { Sentence } from "@/types/sentence";
+import type { Sentence } from "@/types/factcheck";
 
 import EditorTextarea from "./EditorTextarea";
 import HighlightOverlay from "./HighlightOverlay";

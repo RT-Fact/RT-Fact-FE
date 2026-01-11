@@ -4,24 +4,50 @@ import AnalyzePanel from "@/components/Analyze/AnalyzePanel";
 import type { ResultsPanelHandle } from "@/components/Analyze/ResultsPanel";
 import type { EditorContainerHandle } from "@/components/Editor/EditorContainer";
 import EditorSection from "@/components/Editor/EditorSection";
-import type { Sentence } from "@/types/sentence";
-import { isClaim } from "@/types/sentence";
+import {
+  useApplyClaimMutation,
+  useFactCheckMutation,
+  useIgnoreClaimMutation,
+} from "@/hooks/mutations/useFactCheckMutations";
+import type { Sentence } from "@/types/factcheck";
+import { isClaim } from "@/types/factcheck";
 import { calculateIndices } from "@/utils/calculateIndices";
 
 export const HomePage = () => {
   const [text, setText] = useState<string>("");
   const [sentences, setSentences] = useState<Sentence[]>([]);
   const [activeSentenceId, setActiveSentenceId] = useState<string | null>(null);
+  const [factcheckId, setFactcheckId] = useState<string>("");
 
   const editorRef = useRef<EditorContainerHandle>(null);
   const panelRef = useRef<ResultsPanelHandle>(null);
 
-  const handleSubmit = (newSentences: Sentence[]) => {
-    setSentences(newSentences);
+  const { mutate: submitFactCheck, isPending } = useFactCheckMutation();
+  const { mutate: applyClaim } = useApplyClaimMutation();
+  const { mutate: ignoreClaim } = useIgnoreClaimMutation();
+
+  const handleCheck = () => {
+    setSentences([]);
+    submitFactCheck(text, {
+      onSuccess: (data) => {
+        setFactcheckId(data.id);
+        setSentences(data.sentences);
+      },
+      onError: (error) => {
+        console.error(error);
+        // TODO: toast 구현 후 교체
+        alert("팩트체크 실패");
+      },
+    });
+  };
+
+  const handleClearSentences = () => {
+    setSentences([]);
   };
 
   const handleApply = (id: string) => {
-    // 인덱스와 함께 문장 찾기
+    if (!factcheckId) return;
+
     const sentencesWithIndices = calculateIndices(text, sentences);
     const target = sentencesWithIndices.find((s) => s.id === id);
 
@@ -29,12 +55,10 @@ export const HomePage = () => {
       return;
     }
 
-    // 에디터 텍스트에서 해당 문장을 정확한 위치로 교체
     const newEditorText =
       text.slice(0, target.startIndex) + target.suggestion + text.slice(target.endIndex);
     setText(newEditorText);
 
-    // sentences 상태 업데이트: text를 suggestion으로, verdict를 TRUE로, status를 applied로 변경
     setSentences((prev) =>
       prev.map((sentence) => {
         if (sentence.id === id && isClaim(sentence) && sentence.suggestion) {
@@ -48,9 +72,22 @@ export const HomePage = () => {
         return sentence;
       }),
     );
+
+    applyClaim(
+      { factcheckId, claimId: id },
+      {
+        onError: (error) => {
+          console.error(error);
+          // TODO: toast 구현 후 교체
+          alert("서버 저장 실패");
+        },
+      },
+    );
   };
 
   const handleIgnore = (id: string) => {
+    if (!factcheckId) return;
+
     setSentences((prev) =>
       prev.map((sentence) => {
         if (sentence.id === id && sentence.type === "claim") {
@@ -62,9 +99,19 @@ export const HomePage = () => {
         return sentence;
       }),
     );
+
+    ignoreClaim(
+      { factcheckId, claimId: id },
+      {
+        onError: (error) => {
+          console.error(error);
+          // TODO: toast 구현 후 교체
+          alert("서버 저장 실패");
+        },
+      },
+    );
   };
 
-  // 에디터 하이라이트 클릭 → 패널 카드로 스크롤
   const handleHighlightClick = (id: string) => {
     setActiveSentenceId(id);
     if (panelRef.current) {
@@ -72,7 +119,6 @@ export const HomePage = () => {
     }
   };
 
-  // 패널 카드 클릭 → 에디터 문장으로 스크롤
   const handleCardClick = (id: string) => {
     setActiveSentenceId(id);
     if (editorRef.current) {
@@ -89,7 +135,9 @@ export const HomePage = () => {
           text={text}
           onTextChange={setText}
           sentences={sentences}
-          onSubmit={handleSubmit}
+          onCheck={handleCheck}
+          isPending={isPending}
+          onClearSentences={handleClearSentences}
           activeSentenceId={activeSentenceId}
           onHighlightClick={handleHighlightClick}
         />

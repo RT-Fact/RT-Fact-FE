@@ -33,6 +33,37 @@ export type SentenceWithIndices = Sentence & {
   endIndex: number;
 };
 
+// === FactCheck API 응답 타입 ===
+
+export interface FactCheckSummary {
+  total: number;
+  true: number;
+  false: number;
+  opinion: number;
+}
+
+export interface FactCheckResponse {
+  id: string;
+  title: string;
+  originalText: string;
+  sentences: Sentence[];
+  summary: FactCheckSummary;
+  createdAt: string;
+}
+
+export interface ApplyClaimResponse {
+  id: string;
+  status: "applied";
+  appliedText: string;
+  updatedAt: string;
+}
+
+export interface IgnoreClaimResponse {
+  id: string;
+  status: "ignored";
+  updatedAt: string;
+}
+
 export const isClaim = (sentence: Sentence): sentence is ClaimSentence => sentence.type === "claim";
 
 export const isOpinion = (sentence: Sentence): sentence is OpinionSentence =>

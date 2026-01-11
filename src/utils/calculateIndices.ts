@@ -1,4 +1,4 @@
-import type { Sentence, SentenceWithIndices } from "@/types/sentence";
+import type { Sentence, SentenceWithIndices } from "@/types/factcheck";
 
 /**
  * sentences 배열의 각 문장에 대해 editorText 내 위치를 계산합니다.

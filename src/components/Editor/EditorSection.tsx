@@ -1,11 +1,11 @@
-import { type Ref, useState } from "react";
+import type { Ref } from "react";
 
 import { FileText, Loader2, Search, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 // TODO(REMOVE): API 연동 후 삭제 - 목 데이터 import
-import { mockEditorText, mockSentences } from "@/mocks/sentences";
-import type { Sentence } from "@/types/sentence";
+import { mockEditorText } from "@/mocks/sentences";
+import type { Sentence } from "@/types/factcheck";
 
 import EditorContainer, { type EditorContainerHandle } from "./EditorContainer";
 
@@ -13,7 +13,9 @@ interface EditorSectionProps {
   text: string;
   onTextChange: (text: string) => void;
   sentences: Sentence[];
-  onSubmit: (sentences: Sentence[]) => void;
+  onCheck: () => void;
+  isPending: boolean;
+  onClearSentences: () => void;
   activeSentenceId: string | null;
   onHighlightClick: (id: string) => void;
   ref: Ref<EditorContainerHandle>;
@@ -23,27 +25,17 @@ const EditorSection = ({
   text,
   onTextChange,
   sentences,
-  onSubmit,
+  onCheck,
+  isPending,
+  onClearSentences,
   activeSentenceId,
   onHighlightClick,
   ref,
 }: EditorSectionProps) => {
-  const [isChecking, setIsChecking] = useState<boolean>(false);
-
   // TODO(REMOVE): API 연동 후 삭제 - 샘플 버튼 핸들러
   const handleSample = () => {
     onTextChange(mockEditorText);
-    // 샘플 텍스트 로드 시에는 결과 초기화
-    onSubmit([]);
-  };
-
-  const handleCheck = () => {
-    setIsChecking(true);
-    // TODO(FE-14): POST /factcheck API 연동
-    setTimeout(() => {
-      onSubmit(mockSentences);
-      setIsChecking(false);
-    }, 1000);
+    onClearSentences();
   };
 
   return (
@@ -71,10 +63,10 @@ const EditorSection = ({
           <Button
             size="sm"
             className="gap-1.5"
-            onClick={handleCheck}
-            disabled={!text.trim() || isChecking}
+            onClick={onCheck}
+            disabled={text.trim().length === 0 || isPending}
           >
-            {isChecking ? (
+            {isPending ? (
               <Loader2 className="size-4 animate-spin" />
             ) : (
               <Search className="size-4" />
@@ -91,7 +83,7 @@ const EditorSection = ({
           text={text}
           onTextChange={onTextChange}
           placeholder="팩트체크할 텍스트를 입력하거나 붙여넣기 하세요..."
-          disabled={isChecking}
+          disabled={isPending}
           sentences={sentences}
           onHighlightClick={onHighlightClick}
           activeSentenceId={activeSentenceId}

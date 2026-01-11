@@ -31,6 +31,7 @@ const EditorTextarea = ({
       onScroll={onScroll}
       placeholder={placeholder}
       disabled={disabled}
+      aria-label="팩트체크 에디터"
     />
   );
 };
