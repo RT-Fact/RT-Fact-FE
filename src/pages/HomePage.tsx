@@ -135,12 +135,13 @@ export const HomePage = () => {
   };
 
   const handleCardClick = (id: string) => {
+    setActiveSentenceId(id);
+
     const target = sentences.find((s) => s.id === id);
     if (!target || target.startIndex === -1) {
       return;
     }
 
-    setActiveSentenceId(id);
     if (editorRef.current) {
       editorRef.current.scrollToSentence(id);
     }
