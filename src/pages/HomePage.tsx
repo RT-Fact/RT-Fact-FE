@@ -9,13 +9,15 @@ import {
   useFactCheckMutation,
   useIgnoreClaimMutation,
 } from "@/hooks/mutations/useFactCheckMutations";
-import type { Sentence } from "@/types/factcheck";
+import type { SentenceWithIndices } from "@/types/factcheck";
 import { isClaim } from "@/types/factcheck";
+import { adjustIndices } from "@/utils/adjustIndices";
 import { calculateIndices } from "@/utils/calculateIndices";
+import { findEditDelta } from "@/utils/findEditDelta";
 
 export const HomePage = () => {
   const [text, setText] = useState<string>("");
-  const [sentences, setSentences] = useState<Sentence[]>([]);
+  const [sentences, setSentences] = useState<SentenceWithIndices[]>([]);
   const [activeSentenceId, setActiveSentenceId] = useState<string | null>(null);
   const [factcheckId, setFactcheckId] = useState<string>("");
 
@@ -31,7 +33,8 @@ export const HomePage = () => {
     submitFactCheck(text, {
       onSuccess: (data) => {
         setFactcheckId(data.id);
-        setSentences(data.sentences);
+        const withIndices = calculateIndices(text, data.sentences);
+        setSentences(withIndices);
       },
       onError: (error) => {
         console.error(error);
@@ -45,33 +48,47 @@ export const HomePage = () => {
     setSentences([]);
   };
 
+  const handleTextChange = (newText: string) => {
+    if (sentences.length > 0) {
+      const { editStart, editEnd, delta } = findEditDelta(text, newText);
+      setSentences((prev) => adjustIndices(prev, editStart, editEnd, delta));
+    }
+    setText(newText);
+  };
+
   const handleApply = (id: string) => {
     if (!factcheckId) return;
 
-    const sentencesWithIndices = calculateIndices(text, sentences);
-    const target = sentencesWithIndices.find((s) => s.id === id);
+    const target = sentences.find((s) => s.id === id);
 
-    if (!target || !isClaim(target) || !target.suggestion) {
+    if (!target || !isClaim(target) || !target.suggestion || target.startIndex === -1) {
       return;
     }
 
     const newEditorText =
       text.slice(0, target.startIndex) + target.suggestion + text.slice(target.endIndex);
-    setText(newEditorText);
 
-    setSentences((prev) =>
-      prev.map((sentence) => {
+    const delta = target.suggestion.length - target.text.length;
+
+    setSentences((prev) => {
+      const adjusted = adjustIndices(prev, target.startIndex, target.endIndex, delta);
+
+      return adjusted.map((sentence) => {
         if (sentence.id === id && isClaim(sentence) && sentence.suggestion) {
           return {
             ...sentence,
             text: sentence.suggestion,
             verdict: "TRUE" as const,
             status: "applied" as const,
+            startIndex: target.startIndex,
+            endIndex: target.startIndex + sentence.suggestion.length,
           };
         }
         return sentence;
-      }),
-    );
+      });
+    });
+
+    setText(newEditorText);
 
     applyClaim(
       { factcheckId, claimId: id },
@@ -114,6 +131,7 @@ export const HomePage = () => {
 
   const handleHighlightClick = (id: string) => {
     setActiveSentenceId(id);
+
     if (panelRef.current) {
       panelRef.current.scrollToCard(id);
     }
@@ -121,6 +139,12 @@ export const HomePage = () => {
 
   const handleCardClick = (id: string) => {
     setActiveSentenceId(id);
+
+    const target = sentences.find((s) => s.id === id);
+    if (!target || target.startIndex === -1) {
+      return;
+    }
+
     if (editorRef.current) {
       editorRef.current.scrollToSentence(id);
     }
@@ -133,7 +157,7 @@ export const HomePage = () => {
         <EditorSection
           ref={editorRef}
           text={text}
-          onTextChange={setText}
+          onTextChange={handleTextChange}
           sentences={sentences}
           onCheck={handleCheck}
           isPending={isPending}

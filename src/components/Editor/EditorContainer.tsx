@@ -1,6 +1,6 @@
 import { type Ref, type WheelEvent, useImperativeHandle, useRef } from "react";
 
-import type { Sentence } from "@/types/factcheck";
+import type { SentenceWithIndices } from "@/types/factcheck";
 
 import EditorTextarea from "./EditorTextarea";
 import HighlightOverlay from "./HighlightOverlay";
@@ -14,7 +14,7 @@ interface EditorContainerProps {
   onTextChange: (text: string) => void;
   placeholder: string;
   disabled?: boolean;
-  sentences: Sentence[];
+  sentences: SentenceWithIndices[];
   onHighlightClick: (id: string) => void;
   activeSentenceId: string | null;
   ref: Ref<EditorContainerHandle>;
