@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 
 type TabType = "results" | "history";
 
-interface AnalyzeTabHeaderProps {
+interface FactcheckTabHeaderProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
 }
 
-const AnalyzeTabHeader = ({ activeTab, onTabChange }: AnalyzeTabHeaderProps) => {
+const FactcheckTabHeader = ({ activeTab, onTabChange }: FactcheckTabHeaderProps) => {
   return (
     <div className="flex h-14 shrink-0 border-b border-border">
       <button
@@ -40,4 +40,4 @@ const AnalyzeTabHeader = ({ activeTab, onTabChange }: AnalyzeTabHeaderProps) => 
   );
 };
 
-export default AnalyzeTabHeader;
+export default FactcheckTabHeader;

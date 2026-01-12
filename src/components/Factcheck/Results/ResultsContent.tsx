@@ -17,17 +17,17 @@ import { cn } from "@/lib/utils";
 import type { ClaimSentence, Sentence } from "@/types/factcheck";
 import { isClaim, isOpinion } from "@/types/factcheck";
 
-export interface ResultsPanelHandle {
+export interface ResultsContentHandle {
   scrollToCard: (id: string) => void;
 }
 
-interface ResultsPanelProps {
+interface ResultsContentProps {
   sentences: Sentence[];
   onApply: (id: string) => void;
   onIgnore: (id: string) => void;
   activeSentenceId: string | null;
   onCardClick: (id: string) => void;
-  ref: Ref<ResultsPanelHandle>;
+  ref: Ref<ResultsContentHandle>;
 }
 
 const VERDICT_STYLES = {
@@ -67,14 +67,14 @@ const getClaimStyle = (sentence: ClaimSentence) => {
   return VERDICT_STYLES[sentence.verdict];
 };
 
-const ResultsPanel = ({
+const ResultsContent = ({
   sentences,
   onApply,
   onIgnore,
   activeSentenceId,
   onCardClick,
   ref,
-}: ResultsPanelProps) => {
+}: ResultsContentProps) => {
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   useImperativeHandle(ref, () => ({
@@ -267,4 +267,4 @@ const ResultsPanel = ({
   );
 };
 
-export default ResultsPanel;
+export default ResultsContent;

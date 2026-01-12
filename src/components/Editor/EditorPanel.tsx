@@ -9,7 +9,7 @@ import type { SentenceWithIndices } from "@/types/factcheck";
 
 import EditorContainer, { type EditorContainerHandle } from "./EditorContainer";
 
-interface EditorSectionProps {
+interface EditorPanelProps {
   text: string;
   onTextChange: (text: string) => void;
   sentences: SentenceWithIndices[];
@@ -21,7 +21,7 @@ interface EditorSectionProps {
   ref: Ref<EditorContainerHandle>;
 }
 
-const EditorSection = ({
+const EditorPanel = ({
   text,
   onTextChange,
   sentences,
@@ -31,7 +31,7 @@ const EditorSection = ({
   activeSentenceId,
   onHighlightClick,
   ref,
-}: EditorSectionProps) => {
+}: EditorPanelProps) => {
   // TODO(REMOVE): API 연동 후 삭제 - 샘플 버튼 핸들러
   const handleSample = () => {
     onTextChange(mockEditorText);
@@ -93,4 +93,4 @@ const EditorSection = ({
   );
 };
 
-export default EditorSection;
+export default EditorPanel;
