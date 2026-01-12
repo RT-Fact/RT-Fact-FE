@@ -5,14 +5,14 @@ import { FileText, Loader2, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // TODO(REMOVE): API 연동 후 삭제 - 목 데이터 import
 import { mockEditorText } from "@/mocks/sentences";
-import type { Sentence } from "@/types/factcheck";
+import type { SentenceWithIndices } from "@/types/factcheck";
 
 import EditorContainer, { type EditorContainerHandle } from "./EditorContainer";
 
 interface EditorSectionProps {
   text: string;
   onTextChange: (text: string) => void;
-  sentences: Sentence[];
+  sentences: SentenceWithIndices[];
   onCheck: () => void;
   isPending: boolean;
   onClearSentences: () => void;
