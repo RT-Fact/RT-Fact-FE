@@ -71,19 +71,21 @@ export const HomePage = () => {
     const delta = target.suggestion.length - target.text.length;
 
     setSentences((prev) => {
-      const updated = prev.map((sentence) => {
+      const adjusted = adjustIndices(prev, target.startIndex, target.endIndex, delta);
+
+      return adjusted.map((sentence) => {
         if (sentence.id === id && isClaim(sentence) && sentence.suggestion) {
           return {
             ...sentence,
             text: sentence.suggestion,
             verdict: "TRUE" as const,
             status: "applied" as const,
-            endIndex: sentence.startIndex + sentence.suggestion.length,
+            startIndex: target.startIndex,
+            endIndex: target.startIndex + sentence.suggestion.length,
           };
         }
         return sentence;
       });
-      return adjustIndices(updated, target.startIndex, target.endIndex, delta);
     });
 
     setText(newEditorText);
@@ -129,6 +131,7 @@ export const HomePage = () => {
 
   const handleHighlightClick = (id: string) => {
     setActiveSentenceId(id);
+
     if (panelRef.current) {
       panelRef.current.scrollToCard(id);
     }
