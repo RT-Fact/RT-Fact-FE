@@ -20,6 +20,7 @@ export const HomePage = () => {
   const [sentences, setSentences] = useState<SentenceWithIndices[]>([]);
   const [activeSentenceId, setActiveSentenceId] = useState<string | null>(null);
   const [factcheckId, setFactcheckId] = useState<string>("");
+  const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
 
   const editorRef = useRef<EditorContainerHandle>(null);
   const panelRef = useRef<ResultsContentHandle>(null);
@@ -176,6 +177,8 @@ export const HomePage = () => {
           onIgnore={handleIgnore}
           activeSentenceId={activeSentenceId}
           onCardClick={handleCardClick}
+          selectedHistoryId={selectedHistoryId}
+          onSelectHistory={setSelectedHistoryId}
         />
       </div>
     </div>

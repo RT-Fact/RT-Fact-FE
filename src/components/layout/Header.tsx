@@ -4,8 +4,9 @@ import { CheckSquare, Home, LogIn, LogOut, Moon, Settings, Sun } from "lucide-re
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-export const Header = () => {
+const Header = () => {
   // TODO(FE-12): Auth Store 연동 - 현재는 UI 테스트용 Mock
   const isLoggedIn = false;
 
@@ -25,9 +26,11 @@ export const Header = () => {
           <NavLink
             to="/"
             className={({ isActive }) =>
-              isActive
-                ? "text-foreground"
-                : "text-foreground/60 transition-colors hover:text-foreground/80"
+              cn(
+                isActive
+                  ? "text-foreground"
+                  : "text-foreground/60 transition-colors hover:text-foreground/80",
+              )
             }
           >
             <Button variant="ghost" size="sm" className="h-8 w-8 px-0 sm:w-auto sm:px-4">
@@ -38,9 +41,11 @@ export const Header = () => {
           <NavLink
             to="/settings"
             className={({ isActive }) =>
-              isActive
-                ? "text-foreground"
-                : "text-foreground/60 transition-colors hover:text-foreground/80"
+              cn(
+                isActive
+                  ? "text-foreground"
+                  : "text-foreground/60 transition-colors hover:text-foreground/80",
+              )
             }
           >
             <Button variant="ghost" size="sm" className="h-8 w-8 px-0 sm:w-auto sm:px-4">
@@ -84,3 +89,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export default Header;

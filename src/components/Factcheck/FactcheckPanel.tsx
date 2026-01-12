@@ -15,6 +15,8 @@ interface FactcheckPanelProps {
   activeSentenceId: string | null;
   onCardClick: (id: string) => void;
   ref: Ref<ResultsContentHandle>;
+  selectedHistoryId: string | null;
+  onSelectHistory: (id: string | null) => void;
 }
 
 const FactcheckPanel = ({
@@ -24,6 +26,8 @@ const FactcheckPanel = ({
   activeSentenceId,
   onCardClick,
   ref,
+  selectedHistoryId,
+  onSelectHistory,
 }: FactcheckPanelProps) => {
   const [activeTab, setActiveTab] = useState<TabType>("results");
 
@@ -44,7 +48,7 @@ const FactcheckPanel = ({
                 onCardClick={onCardClick}
               />
             ) : (
-              <HistoryContent />
+              <HistoryContent selectedId={selectedHistoryId} onSelect={onSelectHistory} />
             )}
           </div>
         </div>
