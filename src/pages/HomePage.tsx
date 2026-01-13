@@ -9,6 +9,7 @@ import {
   useFactCheckMutation,
   useIgnoreClaimMutation,
 } from "@/hooks/mutations/useFactCheckMutations";
+import { useAuthStore } from "@/stores/authStore";
 import type { SentenceWithIndices } from "@/types/factcheck";
 import { isClaim } from "@/types/factcheck";
 import { adjustIndices } from "@/utils/adjustIndices";
@@ -29,13 +30,23 @@ export const HomePage = () => {
   const { mutate: applyClaim } = useApplyClaimMutation();
   const { mutate: ignoreClaim } = useIgnoreClaimMutation();
 
+  const { isGuest, remainingUses, decrementRemainingUses } = useAuthStore();
+
   const handleCheck = () => {
+    if (isGuest && remainingUses !== null && remainingUses <= 0) {
+      return;
+    }
+
     setSentences([]);
     submitFactCheck(text, {
       onSuccess: (data) => {
         setFactcheckId(data.id);
         const withIndices = calculateIndices(text, data.sentences);
         setSentences(withIndices);
+
+        if (isGuest) {
+          decrementRemainingUses();
+        }
       },
       onError: (error) => {
         console.error(error);

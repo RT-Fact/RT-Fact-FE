@@ -1,26 +1,27 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+import { useAuthStore } from "@/stores/authStore";
+
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 const API_TIMEOUT_MS = 60000;
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: API_TIMEOUT_MS,
+  withCredentials: true, // 쿠키 전송/수신 활성화
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Request interceptor - 토큰 추가
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const { accessToken } = useAuthStore.getState();
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
 
-// Response interceptor - 에러 로깅
 apiClient.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
