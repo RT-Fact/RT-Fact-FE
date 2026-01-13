@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { Toaster } from "@/components/ui/sonner";
+
 import { QueryProvider } from "./QueryProvider";
 
 interface AppProvidersProps {
@@ -7,5 +9,10 @@ interface AppProvidersProps {
 }
 
 export const AppProviders = ({ children }: AppProvidersProps) => {
-  return <QueryProvider>{children}</QueryProvider>;
+  return (
+    <QueryProvider>
+      {children}
+      <Toaster />
+    </QueryProvider>
+  );
 };
