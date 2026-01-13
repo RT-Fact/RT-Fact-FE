@@ -1,11 +1,13 @@
 import { useState } from "react";
 
 import { CheckCircle2, Plus, X, XCircle } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { validateDomain } from "@/utils/validateDomain";
 
 interface DomainListEditorProps {
   title: string;
@@ -38,15 +40,31 @@ const DomainListEditor = ({
   isPending = false,
 }: DomainListEditorProps) => {
   const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const config = variantConfig[variant];
   const Icon = config.icon;
 
   const handleAdd = () => {
-    const trimmed = inputValue.trim().toLowerCase();
-    if (trimmed && !domains.includes(trimmed)) {
-      onAdd(trimmed);
-      setInputValue("");
+    const result = validateDomain(inputValue);
+
+    if (!result.success) {
+      setError(result.error);
+      return;
     }
+
+    if (domains.includes(result.data)) {
+      toast.error("이미 추가된 도메인입니다");
+      return;
+    }
+
+    onAdd(result.data);
+    setInputValue("");
+    setError(null);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    if (error) setError(null);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -72,7 +90,7 @@ const DomainListEditor = ({
             key={domain}
             className="flex items-center justify-between rounded-md border bg-background px-3 py-2"
           >
-            <span className="text-sm">{domain}</span>
+            <span className="min-w-0 break-all text-sm">{domain}</span>
             <Button
               variant="ghost"
               size="icon-sm"
@@ -87,19 +105,27 @@ const DomainListEditor = ({
       </div>
 
       {/* Add Domain Input */}
-      <div className="flex gap-2">
-        <Input
-          placeholder="도메인 입력 (예: example.com)"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={isPending}
-          className="flex-1"
-        />
-        <Button onClick={handleAdd} disabled={isPending || !inputValue.trim()} className="gap-1.5">
-          <Plus className="size-4" />
-          추가
-        </Button>
+      <div className="flex flex-col gap-1.5">
+        <div className="flex gap-2">
+          <Input
+            placeholder="도메인 입력 (예: example.com)"
+            value={inputValue}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            disabled={isPending}
+            className={cn("flex-1", error && "border-destructive")}
+            aria-invalid={!!error}
+          />
+          <Button
+            onClick={handleAdd}
+            disabled={isPending || !inputValue.trim()}
+            className="gap-1.5"
+          >
+            <Plus className="size-4" />
+            추가
+          </Button>
+        </div>
+        {error && <p className="text-sm text-destructive">{error}</p>}
       </div>
     </Card>
   );
