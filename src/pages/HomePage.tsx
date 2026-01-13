@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 
-import AnalyzePanel from "@/components/Analyze/AnalyzePanel";
-import type { ResultsPanelHandle } from "@/components/Analyze/ResultsPanel";
 import type { EditorContainerHandle } from "@/components/Editor/EditorContainer";
-import EditorSection from "@/components/Editor/EditorSection";
+import EditorPanel from "@/components/Editor/EditorPanel";
+import FactcheckPanel from "@/components/Factcheck/FactcheckPanel";
+import type { ResultsContentHandle } from "@/components/Factcheck/Results/ResultsContent";
 import {
   useApplyClaimMutation,
   useFactCheckMutation,
@@ -20,9 +20,10 @@ export const HomePage = () => {
   const [sentences, setSentences] = useState<SentenceWithIndices[]>([]);
   const [activeSentenceId, setActiveSentenceId] = useState<string | null>(null);
   const [factcheckId, setFactcheckId] = useState<string>("");
+  const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
 
   const editorRef = useRef<EditorContainerHandle>(null);
-  const panelRef = useRef<ResultsPanelHandle>(null);
+  const panelRef = useRef<ResultsContentHandle>(null);
 
   const { mutate: submitFactCheck, isPending } = useFactCheckMutation();
   const { mutate: applyClaim } = useApplyClaimMutation();
@@ -154,7 +155,7 @@ export const HomePage = () => {
     <div className="flex h-full min-h-0 flex-1 flex-col lg:flex-row">
       {/* Editor Column */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:w-[60%]">
-        <EditorSection
+        <EditorPanel
           ref={editorRef}
           text={text}
           onTextChange={handleTextChange}
@@ -169,13 +170,15 @@ export const HomePage = () => {
 
       {/* Results/History Column */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-l border-border lg:w-[40%] lg:flex-none">
-        <AnalyzePanel
+        <FactcheckPanel
           ref={panelRef}
           sentences={sentences}
           onApply={handleApply}
           onIgnore={handleIgnore}
           activeSentenceId={activeSentenceId}
           onCardClick={handleCardClick}
+          selectedHistoryId={selectedHistoryId}
+          onSelectHistory={setSelectedHistoryId}
         />
       </div>
     </div>

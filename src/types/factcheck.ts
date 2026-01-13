@@ -68,3 +68,25 @@ export const isClaim = (sentence: Sentence): sentence is ClaimSentence => senten
 
 export const isOpinion = (sentence: Sentence): sentence is OpinionSentence =>
   sentence.type === "opinion";
+
+// === History API 응답 타입 ===
+
+export interface HistoryItem {
+  id: string;
+  title: string;
+  preview: string;
+  checkedCount: number;
+  createdAt: string;
+}
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface HistoryResponse {
+  items: HistoryItem[];
+  pagination: Pagination;
+}

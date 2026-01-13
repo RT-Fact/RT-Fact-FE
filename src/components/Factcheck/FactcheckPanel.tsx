@@ -2,40 +2,44 @@ import { type Ref, useState } from "react";
 
 import type { Sentence } from "@/types/factcheck";
 
-import AnalyzeTabHeader from "./AnalyzeTabHeader";
-import HistoryPanel from "./HistoryPanel";
-import ResultsPanel, { type ResultsPanelHandle } from "./ResultsPanel";
+import FactcheckTabHeader from "./FactcheckTabHeader";
+import HistoryContent from "./History/HistoryContent";
+import ResultsContent, { type ResultsContentHandle } from "./Results/ResultsContent";
 
 type TabType = "results" | "history";
 
-interface AnalyzePanelProps {
+interface FactcheckPanelProps {
   sentences: Sentence[];
   onApply: (id: string) => void;
   onIgnore: (id: string) => void;
   activeSentenceId: string | null;
   onCardClick: (id: string) => void;
-  ref: Ref<ResultsPanelHandle>;
+  ref: Ref<ResultsContentHandle>;
+  selectedHistoryId: string | null;
+  onSelectHistory: (id: string | null) => void;
 }
 
-const AnalyzePanel = ({
+const FactcheckPanel = ({
   sentences,
   onApply,
   onIgnore,
   activeSentenceId,
   onCardClick,
   ref,
-}: AnalyzePanelProps) => {
+  selectedHistoryId,
+  onSelectHistory,
+}: FactcheckPanelProps) => {
   const [activeTab, setActiveTab] = useState<TabType>("results");
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-0 bg-background">
-      <AnalyzeTabHeader activeTab={activeTab} onTabChange={setActiveTab} />
+      <FactcheckTabHeader activeTab={activeTab} onTabChange={setActiveTab} />
 
       <div className="mt-0 min-h-0 flex-1 flex-col overflow-hidden">
         <div className="flex overflow-y-auto h-full">
           <div className="flex min-h-0 flex-1 flex-col">
             {activeTab === "results" ? (
-              <ResultsPanel
+              <ResultsContent
                 ref={ref}
                 sentences={sentences}
                 onApply={onApply}
@@ -44,7 +48,7 @@ const AnalyzePanel = ({
                 onCardClick={onCardClick}
               />
             ) : (
-              <HistoryPanel />
+              <HistoryContent selectedId={selectedHistoryId} onSelect={onSelectHistory} />
             )}
           </div>
         </div>
@@ -53,4 +57,4 @@ const AnalyzePanel = ({
   );
 };
 
-export default AnalyzePanel;
+export default FactcheckPanel;
