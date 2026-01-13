@@ -1,3 +1,5 @@
+import type { MouseEventHandler } from "react";
+
 import { FileText, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +16,7 @@ interface HistoryCardProps {
 }
 
 const HistoryCard = ({ item, isSelected, onSelect, onDelete }: HistoryCardProps) => {
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleDelete: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     onDelete(item.id);
   };
