@@ -1,39 +1,12 @@
-import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 
-import { useAuthTokenMutation } from "@/hooks/mutations/useAuthMutations";
-import { useAuthStore } from "@/stores/authStore";
+import { useAuthTokenQuery } from "@/hooks/queries/useAuthTokenQuery";
 
 export const AuthCallbackPage = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const { setSession } = useAuthStore();
+  const code = searchParams.get("code");
 
-  const { mutate: exchangeToken } = useAuthTokenMutation();
-
-  useEffect(() => {
-    const code = searchParams.get("code");
-
-    if (!code) {
-      console.error("OAuth callback: No code received");
-      void navigate("/login");
-      return;
-    }
-
-    exchangeToken(code, {
-      onSuccess: (data) => {
-        setSession({
-          accessToken: data.accessToken,
-          isGuest: false,
-        });
-        void navigate("/");
-      },
-      onError: (error) => {
-        console.error("Token exchange failed:", error);
-        void navigate("/login");
-      },
-    });
-  }, [searchParams, navigate, setSession, exchangeToken]);
+  useAuthTokenQuery(code);
 
   return (
     <div className="flex flex-1 items-center justify-center">
