@@ -26,7 +26,7 @@ const HistoryCard = ({ item, isSelected, onSelect, onDelete }: HistoryCardProps)
       <Card
         onClick={() => onSelect(item.id)}
         className={cn(
-          "group cursor-pointer p-4 transition-all duration-200 hover:shadow-md",
+          "group w-full cursor-pointer p-4 transition-all duration-200 hover:shadow-md",
           isSelected && "ring-2 ring-primary bg-primary/5",
         )}
       >
@@ -36,7 +36,9 @@ const HistoryCard = ({ item, isSelected, onSelect, onDelete }: HistoryCardProps)
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="truncate text-sm font-medium">{item.title}</h3>
+              <h3 className="text-sm font-medium wrap-break-word whitespace-normal">
+                {item.title}
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -47,7 +49,9 @@ const HistoryCard = ({ item, isSelected, onSelect, onDelete }: HistoryCardProps)
                 <Trash2 className="size-3.5 text-muted-foreground hover:text-destructive" />
               </Button>
             </div>
-            <p className="mt-1 truncate text-xs text-muted-foreground">{item.preview}</p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground wrap-break-word whitespace-normal">
+              {item.preview}
+            </p>
             <div className="mt-2 flex items-center justify-between">
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                 {item.checkedCount}개 검증

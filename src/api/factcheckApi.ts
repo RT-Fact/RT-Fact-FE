@@ -1,6 +1,20 @@
-import type { ApplyClaimResponse, FactCheckResponse, IgnoreClaimResponse } from "@/types/factcheck";
+import type {
+  ApplyClaimResponse,
+  FactCheckResponse,
+  HistoryResponse,
+  IgnoreClaimResponse,
+} from "@/types/factcheck";
 
 import { apiClient } from "./client";
+
+interface DeleteFactCheckResponse {
+  success: boolean;
+}
+
+export interface GetHistoryListParams {
+  page?: number;
+  limit?: number;
+}
 
 export const postFactCheck = async (text: string): Promise<FactCheckResponse> => {
   const { data } = await apiClient.post<FactCheckResponse>("/factcheck", { text });
@@ -24,5 +38,17 @@ export const patchIgnoreClaim = async (
   const { data } = await apiClient.patch<IgnoreClaimResponse>(
     `/factcheck/${factcheckId}/claims/${claimId}/ignore`,
   );
+  return data;
+};
+
+export const getHistoryList = async (
+  params: GetHistoryListParams = {},
+): Promise<HistoryResponse> => {
+  const { data } = await apiClient.get<HistoryResponse>("/factcheck", { params });
+  return data;
+};
+
+export const deleteFactCheck = async (factcheckId: string): Promise<DeleteFactCheckResponse> => {
+  const { data } = await apiClient.delete<DeleteFactCheckResponse>(`/factcheck/${factcheckId}`);
   return data;
 };
