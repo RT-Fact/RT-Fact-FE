@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 
+import { toast } from "sonner";
 import { useShallow } from "zustand/shallow";
 
 import type { EditorContainerHandle } from "@/components/Editor/EditorContainer";
 import EditorPanel from "@/components/Editor/EditorPanel";
 import FactcheckPanel from "@/components/Factcheck/FactcheckPanel";
 import type { ResultsContentHandle } from "@/components/Factcheck/Results/ResultsContent";
+import { DEFAULT_GUEST_USAGE_END } from "@/constants/guest";
 import {
   useApplyClaimMutation,
   useFactCheckMutation,
@@ -37,14 +39,14 @@ export const HomePage = () => {
     useShallow((state) => ({
       isGuest: state.isGuest,
       remainingUses: state.remainingUses,
-      decrementRemainingUses: state.decrementRemainingUses,
+      decrementRemainingUses: state.actions.decrementRemainingUses,
     })),
   );
   const setGuestLimitModalOpen = useModalStore((state) => state.setGuestLimitModalOpen);
 
   const handleCheck = () => {
     // 게스트이고 남은 횟수가 0 이하면 모달 표시
-    if (isGuest && remainingUses !== null && remainingUses <= 0) {
+    if (isGuest && remainingUses !== null && remainingUses <= DEFAULT_GUEST_USAGE_END) {
       setGuestLimitModalOpen(true);
       return;
     }
@@ -62,8 +64,7 @@ export const HomePage = () => {
       },
       onError: (error) => {
         console.error(error);
-        // TODO: toast 구현 후 교체
-        alert("팩트체크 실패");
+        toast.error("팩트체크 실패");
       },
     });
   };
@@ -119,8 +120,7 @@ export const HomePage = () => {
       {
         onError: (error) => {
           console.error(error);
-          // TODO: toast 구현 후 교체
-          alert("서버 저장 실패");
+          toast.error("서버 저장 실패");
         },
       },
     );
@@ -146,8 +146,7 @@ export const HomePage = () => {
       {
         onError: (error) => {
           console.error(error);
-          // TODO: toast 구현 후 교체
-          alert("서버 저장 실패");
+          toast.error("서버 저장 실패");
         },
       },
     );

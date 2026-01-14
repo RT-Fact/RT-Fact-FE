@@ -14,7 +14,7 @@ const Header = () => {
     useShallow((state) => ({
       accessToken: state.accessToken,
       isGuest: state.isGuest,
-      logout: state.logout,
+      logout: state.actions.logout,
     })),
   );
   const { mutate: logoutMutate } = useLogoutMutation();

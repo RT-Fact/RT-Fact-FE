@@ -20,7 +20,7 @@ import { useModalStore } from "@/stores/modalStore";
 
 export const MainLayout = () => {
   const navigate = useNavigate();
-  const { accessToken } = useAuthStore();
+  const accessToken = useAuthStore((state) => state.accessToken);
   const isGuestLimitModalOpen = useModalStore((state) => state.isGuestLimitModalOpen);
   const setGuestLimitModalOpen = useModalStore((state) => state.setGuestLimitModalOpen);
   const { isLoading, isError } = useSessionQuery();

@@ -11,7 +11,7 @@ export const useSessionQuery = () => {
     useShallow((state) => ({
       isGuest: state.isGuest,
       accessToken: state.accessToken,
-      setSession: state.setSession,
+      setSession: state.actions.setSession,
     })),
   );
 

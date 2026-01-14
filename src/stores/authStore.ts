@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+import {
+  DEFAULT_GUEST_USAGE,
+  DEFAULT_GUEST_USAGE_DECREMENT,
+  DEFAULT_GUEST_USAGE_END,
+} from "@/constants/guest";
+
 interface User {
   id: string;
   email: string | null;
@@ -11,20 +17,21 @@ interface AuthState {
   user: User | null;
   accessToken: string | null;
   isGuest: boolean;
-
-  setAccessToken: (token: string | null) => void;
-  setUser: (user: User | null) => void;
-  setIsGuest: (isGuest: boolean, remainingUses?: number) => void;
-  setSession: (data: {
-    accessToken: string;
-    isGuest: boolean;
-    remainingUses?: number | null;
-    user?: User | null;
-  }) => void;
-  logout: () => void;
-
   remainingUses: number | null;
-  decrementRemainingUses: () => void;
+
+  actions: {
+    setAccessToken: (token: string | null) => void;
+    setUser: (user: User | null) => void;
+    setIsGuest: (isGuest: boolean, remainingUses?: number) => void;
+    setSession: (data: {
+      accessToken: string;
+      isGuest: boolean;
+      remainingUses?: number | null;
+      user?: User | null;
+    }) => void;
+    logout: () => void;
+    decrementRemainingUses: () => void;
+  };
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -35,45 +42,47 @@ export const useAuthStore = create<AuthState>()(
       isGuest: true,
       remainingUses: null,
 
-      setAccessToken: (token) => {
-        set({
-          accessToken: token,
-        });
-      },
+      actions: {
+        setAccessToken: (token) => {
+          set({
+            accessToken: token,
+          });
+        },
 
-      setUser: (user) => {
-        set({ user });
-      },
+        setUser: (user) => {
+          set({ user });
+        },
 
-      setIsGuest: (isGuest, remainingUses) => {
-        set({
-          isGuest,
-          remainingUses: isGuest ? (remainingUses ?? 3) : null,
-        });
-      },
+        setIsGuest: (isGuest, remainingUses) => {
+          set({
+            isGuest,
+            remainingUses: isGuest ? (remainingUses ?? DEFAULT_GUEST_USAGE) : null,
+          });
+        },
 
-      setSession: (data) => {
-        set({
-          accessToken: data.accessToken,
-          isGuest: data.isGuest,
-          remainingUses: data.isGuest ? (data.remainingUses ?? 3) : null,
-          user: data.user || get().user,
-        });
-      },
+        setSession: (data) => {
+          set({
+            accessToken: data.accessToken,
+            isGuest: data.isGuest,
+            remainingUses: data.isGuest ? (data.remainingUses ?? DEFAULT_GUEST_USAGE) : null,
+            user: data.user || get().user,
+          });
+        },
 
-      decrementRemainingUses: () => {
-        const { remainingUses } = get();
-        if (remainingUses !== null && remainingUses > 0) {
-          set({ remainingUses: remainingUses - 1 });
-        }
-      },
+        decrementRemainingUses: () => {
+          const { remainingUses } = get();
+          if (remainingUses !== null && remainingUses > DEFAULT_GUEST_USAGE_END) {
+            set({ remainingUses: remainingUses - DEFAULT_GUEST_USAGE_DECREMENT });
+          }
+        },
 
-      logout: () => {
-        set({
-          accessToken: null,
-          isGuest: true,
-        });
-        window.location.href = "/";
+        logout: () => {
+          set({
+            accessToken: null,
+            isGuest: true,
+          });
+          window.location.href = "/";
+        },
       },
     }),
     {

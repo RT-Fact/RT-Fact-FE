@@ -9,7 +9,7 @@ import { useAuthStore } from "@/stores/authStore";
 export const useAuthTokenQuery = (code: string | null) => {
   const navigate = useNavigate();
   const accessToken = useAuthStore((state) => state.accessToken);
-  const setSession = useAuthStore((state) => state.setSession);
+  const setSession = useAuthStore((state) => state.actions.setSession);
 
   const query = useQuery({
     queryKey: ["authToken", code],
