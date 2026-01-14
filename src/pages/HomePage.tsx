@@ -1,14 +1,20 @@
 import { useRef, useState } from "react";
 
+import { toast } from "sonner";
+import { useShallow } from "zustand/shallow";
+
 import type { EditorContainerHandle } from "@/components/Editor/EditorContainer";
 import EditorPanel from "@/components/Editor/EditorPanel";
 import FactcheckPanel from "@/components/Factcheck/FactcheckPanel";
 import type { ResultsContentHandle } from "@/components/Factcheck/Results/ResultsContent";
+import { DEFAULT_GUEST_USAGE_END } from "@/constants/guest";
 import {
   useApplyClaimMutation,
   useFactCheckMutation,
   useIgnoreClaimMutation,
 } from "@/hooks/mutations/useFactCheckMutations";
+import { useAuthStore } from "@/stores/authStore";
+import { useModalStore } from "@/stores/modalStore";
 import type { SentenceWithIndices } from "@/types/factcheck";
 import { isClaim } from "@/types/factcheck";
 import { adjustIndices } from "@/utils/adjustIndices";
@@ -29,18 +35,36 @@ export const HomePage = () => {
   const { mutate: applyClaim } = useApplyClaimMutation();
   const { mutate: ignoreClaim } = useIgnoreClaimMutation();
 
+  const { isGuest, remainingUses, decrementRemainingUses } = useAuthStore(
+    useShallow((state) => ({
+      isGuest: state.isGuest,
+      remainingUses: state.remainingUses,
+      decrementRemainingUses: state.actions.decrementRemainingUses,
+    })),
+  );
+  const setGuestLimitModalOpen = useModalStore((state) => state.setGuestLimitModalOpen);
+
   const handleCheck = () => {
+    // 게스트이고 남은 횟수가 0 이하면 모달 표시
+    if (isGuest && remainingUses !== null && remainingUses <= DEFAULT_GUEST_USAGE_END) {
+      setGuestLimitModalOpen(true);
+      return;
+    }
+
     setSentences([]);
     submitFactCheck(text, {
       onSuccess: (data) => {
         setFactcheckId(data.id);
         const withIndices = calculateIndices(text, data.sentences);
         setSentences(withIndices);
+
+        if (isGuest) {
+          decrementRemainingUses();
+        }
       },
       onError: (error) => {
         console.error(error);
-        // TODO: toast 구현 후 교체
-        alert("팩트체크 실패");
+        toast.error("팩트체크 실패");
       },
     });
   };
@@ -96,8 +120,7 @@ export const HomePage = () => {
       {
         onError: (error) => {
           console.error(error);
-          // TODO: toast 구현 후 교체
-          alert("서버 저장 실패");
+          toast.error("서버 저장 실패");
         },
       },
     );
@@ -123,8 +146,7 @@ export const HomePage = () => {
       {
         onError: (error) => {
           console.error(error);
-          // TODO: toast 구현 후 교체
-          alert("서버 저장 실패");
+          toast.error("서버 저장 실패");
         },
       },
     );
