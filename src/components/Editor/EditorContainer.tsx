@@ -74,7 +74,7 @@ const EditorContainer = ({
   return (
     <div
       className={`
-        relative flex-1 w-full min-h-[500px]
+        relative flex-1 w-full min-h-0 lg:min-h-[500px]
         rounded-lg border-2 border-dashed border-muted/50
         bg-card/50 shadow-sm
         transition-all duration-200
