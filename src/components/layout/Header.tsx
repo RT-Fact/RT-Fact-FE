@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router";
 
 import { CheckSquare, Home, LogIn, LogOut, Moon, Settings, Sun } from "lucide-react";
+import { useShallow } from "zustand/shallow";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,10 +10,15 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/authStore";
 
 const Header = () => {
-  const { accessToken, isGuest, logout } = useAuthStore();
+  const { accessToken, isGuest, logout } = useAuthStore(
+    useShallow((state) => ({
+      accessToken: state.accessToken,
+      isGuest: state.isGuest,
+      logout: state.logout,
+    })),
+  );
   const { mutate: logoutMutate } = useLogoutMutation();
 
-  // Show logout only if authenticated (accessToken exists) AND not a guest
   const showLogout = !!accessToken && !isGuest;
 
   const handleLogout = () => {

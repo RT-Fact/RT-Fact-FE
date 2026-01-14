@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 
+import { useShallow } from "zustand/shallow";
+
 import type { EditorContainerHandle } from "@/components/Editor/EditorContainer";
 import EditorPanel from "@/components/Editor/EditorPanel";
 import FactcheckPanel from "@/components/Factcheck/FactcheckPanel";
@@ -10,6 +12,7 @@ import {
   useIgnoreClaimMutation,
 } from "@/hooks/mutations/useFactCheckMutations";
 import { useAuthStore } from "@/stores/authStore";
+import { useModalStore } from "@/stores/modalStore";
 import type { SentenceWithIndices } from "@/types/factcheck";
 import { isClaim } from "@/types/factcheck";
 import { adjustIndices } from "@/utils/adjustIndices";
@@ -30,10 +33,19 @@ export const HomePage = () => {
   const { mutate: applyClaim } = useApplyClaimMutation();
   const { mutate: ignoreClaim } = useIgnoreClaimMutation();
 
-  const { isGuest, remainingUses, decrementRemainingUses } = useAuthStore();
+  const { isGuest, remainingUses, decrementRemainingUses } = useAuthStore(
+    useShallow((state) => ({
+      isGuest: state.isGuest,
+      remainingUses: state.remainingUses,
+      decrementRemainingUses: state.decrementRemainingUses,
+    })),
+  );
+  const setGuestLimitModalOpen = useModalStore((state) => state.setGuestLimitModalOpen);
 
   const handleCheck = () => {
+    // 게스트이고 남은 횟수가 0 이하면 모달 표시
     if (isGuest && remainingUses !== null && remainingUses <= 0) {
+      setGuestLimitModalOpen(true);
       return;
     }
 

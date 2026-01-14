@@ -24,58 +24,38 @@ const cardVariants = cva(
   },
 );
 
-interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {
+interface CardProps extends React.ComponentProps<"div">, VariantProps<typeof cardVariants> {
   asChild?: boolean;
 }
 
-const CardRoot = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "div";
-    return <Comp ref={ref} className={cn(cardVariants({ variant, className }))} {...props} />;
-  },
-);
-CardRoot.displayName = "Card";
+const CardRoot = ({ className, variant, asChild = false, ref, ...props }: CardProps) => {
+  const Comp = asChild ? Slot : "div";
+  return <Comp ref={ref} className={cn(cardVariants({ variant, className }))} {...props} />;
+};
 
-const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
-  ),
+const CardHeader = ({ className, ref, ...props }: React.ComponentProps<"div">) => (
+  <div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
 );
-CardHeader.displayName = "CardHeader";
 
-const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
-    <h3
-      ref={ref}
-      className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
-      {...props}
-    />
-  ),
+const CardTitle = ({ className, ref, ...props }: React.ComponentProps<"h3">) => (
+  <h3
+    ref={ref}
+    className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
+    {...props}
+  />
 );
-CardTitle.displayName = "CardTitle";
 
-const CardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
+const CardDescription = ({ className, ref, ...props }: React.ComponentProps<"p">) => (
   <p ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
-));
-CardDescription.displayName = "CardDescription";
-
-const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
-  ),
 );
-CardContent.displayName = "CardContent";
 
-const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />
-  ),
+const CardContent = ({ className, ref, ...props }: React.ComponentProps<"div">) => (
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
 );
-CardFooter.displayName = "CardFooter";
+
+const CardFooter = ({ className, ref, ...props }: React.ComponentProps<"div">) => (
+  <div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />
+);
 
 // Compound Component Pattern: 서브 컴포넌트를 Card 객체에 할당
 const Card = Object.assign(CardRoot, {

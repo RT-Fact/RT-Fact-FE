@@ -7,7 +7,7 @@ import { useAuthStore } from "@/stores/authStore";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const { accessToken } = useAuthStore();
+  const accessToken = useAuthStore((state) => state.accessToken);
 
   const handleGoogleLogin = () => {
     window.location.href = `${API_BASE_URL}/auth/google`;
