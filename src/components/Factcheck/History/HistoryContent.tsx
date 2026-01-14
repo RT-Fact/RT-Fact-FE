@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import { DEFAULT_PAGE_LIMIT } from "@/constants/pagination";
+import { useDeleteFactCheckMutation } from "@/hooks/mutations/useFactCheckMutations";
 import { factcheckQueries } from "@/queries/factcheckQueries";
 
 import HistoryCard from "./HistoryCard";
@@ -19,6 +20,7 @@ const HistoryContent = ({ selectedId, onSelect }: HistoryContentProps) => {
   const { data, isPending, isError, refetch } = useQuery(
     factcheckQueries.list({ page, limit: DEFAULT_PAGE_LIMIT }),
   );
+  const { mutate: deleteFactCheck } = useDeleteFactCheckMutation();
 
   if (isPending) {
     return (
@@ -39,27 +41,18 @@ const HistoryContent = ({ selectedId, onSelect }: HistoryContentProps) => {
     );
   }
 
-  const handleSelect = (id: string) => {
-    onSelect(id);
-  };
-
   const handleDelete = (id: string) => {
-    // TODO: useMutation 연결
-    console.log("Delete history:", id);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    deleteFactCheck(id);
   };
 
   return (
-    <HistoryList pagination={data.pagination} onPageChange={handlePageChange}>
+    <HistoryList pagination={data.pagination} onPageChange={setPage}>
       {data.items.map((item) => (
         <HistoryCard
           key={item.id}
           item={item}
           isSelected={selectedId === item.id}
-          onSelect={handleSelect}
+          onSelect={onSelect}
           onDelete={handleDelete}
         />
       ))}
