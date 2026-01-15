@@ -39,7 +39,7 @@ const EditorPanel = ({
   };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 flex-col ">
       {/* Toolbar */}
       <div className="flex items-center justify-between border-b border-border bg-background/50 px-4 py-3 backdrop-blur-sm">
         <div className="flex items-center gap-3">

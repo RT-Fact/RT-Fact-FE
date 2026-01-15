@@ -31,7 +31,7 @@ const HighlightOverlay = ({
   return (
     <div
       ref={ref}
-      className="editor-overlay pointer-events-none text-transparent z-10"
+      className="editor-overlay pointer-events-none text-transparent z-10 overflow-hidden"
       onWheel={onWheel}
     >
       {segments.map((segment) =>
