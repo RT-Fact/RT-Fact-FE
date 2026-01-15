@@ -28,6 +28,7 @@ interface ResultsContentProps {
   activeSentenceId: string | null;
   onCardClick: (id: string) => void;
   ref: Ref<ResultsContentHandle>;
+  isPreviewMode: boolean;
 }
 
 const VERDICT_STYLES = {
@@ -74,6 +75,7 @@ const ResultsContent = ({
   activeSentenceId,
   onCardClick,
   ref,
+  isPreviewMode,
 }: ResultsContentProps) => {
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -112,7 +114,14 @@ const ResultsContent = ({
     <div className="flex flex-1 flex-col gap-4 overflow-y-auto pt-4 pl-3 pr-2 pb-4">
       {/* Summary Card */}
       <Card variant="summary" className="flex flex-col gap-4 p-6">
-        <h3 className="font-semibold text-foreground">분석 결과</h3>
+        <h3 className="font-semibold text-foreground">
+          분석 결과
+          {isPreviewMode && (
+            <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+              미리보기
+            </span>
+          )}
+        </h3>
         <div className="grid grid-cols-3 gap-3">
           <div className="flex flex-col items-center justify-center gap-2 rounded-xl bg-green-100/50 p-4">
             <CheckCircle2 className="size-6 text-green-500" />

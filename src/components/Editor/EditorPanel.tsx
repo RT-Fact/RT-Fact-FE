@@ -1,10 +1,8 @@
 import type { Ref } from "react";
 
-import { FileText, Loader2, Search, Sparkles } from "lucide-react";
+import { Loader2, RotateCcw, Search, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-// TODO(REMOVE): API 연동 후 삭제 - 목 데이터 import
-import { mockEditorText } from "@/mocks/sentences";
 import type { SentenceWithIndices } from "@/types/factcheck";
 
 import EditorContainer, { type EditorContainerHandle } from "./EditorContainer";
@@ -19,6 +17,7 @@ interface EditorPanelProps {
   activeSentenceId: string | null;
   onHighlightClick: (id: string) => void;
   ref: Ref<EditorContainerHandle>;
+  isPreviewMode: boolean;
 }
 
 const EditorPanel = ({
@@ -31,10 +30,10 @@ const EditorPanel = ({
   activeSentenceId,
   onHighlightClick,
   ref,
+  isPreviewMode,
 }: EditorPanelProps) => {
-  // TODO(REMOVE): API 연동 후 삭제 - 샘플 버튼 핸들러
-  const handleSample = () => {
-    onTextChange(mockEditorText);
+  const handleReset = () => {
+    onTextChange("");
     onClearSentences();
   };
 
@@ -55,16 +54,21 @@ const EditorPanel = ({
           )}
         </div>
         <div className="flex items-center gap-2">
-          {/* TODO(REMOVE): API 연동 후 삭제 - 샘플 버튼 */}
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={handleSample}>
-            <FileText className="size-4" />
-            샘플
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5"
+            onClick={handleReset}
+            disabled={text.length === 0 || isPending || isPreviewMode}
+          >
+            <RotateCcw className="size-4" />
+            초기화
           </Button>
           <Button
             size="sm"
             className="gap-1.5"
             onClick={onCheck}
-            disabled={text.trim().length === 0 || isPending}
+            disabled={text.trim().length === 0 || isPending || isPreviewMode}
           >
             {isPending ? (
               <Loader2 className="size-4 animate-spin" />
@@ -83,7 +87,7 @@ const EditorPanel = ({
           text={text}
           onTextChange={onTextChange}
           placeholder="팩트체크할 텍스트를 입력하거나 붙여넣기 하세요..."
-          disabled={isPending}
+          disabled={isPending || isPreviewMode}
           sentences={sentences}
           onHighlightClick={onHighlightClick}
           activeSentenceId={activeSentenceId}

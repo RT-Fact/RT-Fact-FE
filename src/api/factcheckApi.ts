@@ -52,3 +52,8 @@ export const deleteFactCheck = async (factcheckId: string): Promise<DeleteFactCh
   const { data } = await apiClient.delete<DeleteFactCheckResponse>(`/factcheck/${factcheckId}`);
   return data;
 };
+
+export const getFactCheckDetail = async (id: string): Promise<FactCheckResponse> => {
+  const { data } = await apiClient.get<FactCheckResponse>(`/factcheck/${id}`);
+  return data;
+};
