@@ -27,8 +27,7 @@ const DeleteTrigger = ({ onConfirm }: DeleteTriggerProps) => {
     e.stopPropagation();
   };
 
-  const handleConfirmClick: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation();
+  const handleConfirmClick: MouseEventHandler<HTMLButtonElement> = () => {
     onConfirm();
   };
 
