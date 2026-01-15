@@ -12,8 +12,8 @@ interface DeleteFactCheckResponse {
 }
 
 export interface GetHistoryListParams {
-  page?: number;
-  limit?: number;
+  page: number;
+  limit: number;
 }
 
 export const postFactCheck = async (text: string): Promise<FactCheckResponse> => {
@@ -41,9 +41,7 @@ export const patchIgnoreClaim = async (
   return data;
 };
 
-export const getHistoryList = async (
-  params: GetHistoryListParams = {},
-): Promise<HistoryResponse> => {
+export const getHistoryList = async (params: GetHistoryListParams): Promise<HistoryResponse> => {
   const { data } = await apiClient.get<HistoryResponse>("/factcheck", { params });
   return data;
 };
