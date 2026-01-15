@@ -23,8 +23,13 @@ interface DeleteTriggerProps {
 }
 
 const DeleteTrigger = ({ onConfirm }: DeleteTriggerProps) => {
-  const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+  const handleTriggerClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
+  };
+
+  const handleConfirmClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    onConfirm();
   };
 
   return (
@@ -34,7 +39,7 @@ const DeleteTrigger = ({ onConfirm }: DeleteTriggerProps) => {
           variant="ghost"
           size="icon"
           className="size-6 shrink-0"
-          onClick={handleClick}
+          onClick={handleTriggerClick}
           aria-label="기록 삭제"
         >
           <Trash2 className="size-3.5 text-muted-foreground hover:text-destructive" />
@@ -48,7 +53,7 @@ const DeleteTrigger = ({ onConfirm }: DeleteTriggerProps) => {
         </ModalHeader>
         <ModalFooter>
           <ModalClose asChild>
-            <Button variant="destructive" onClick={onConfirm} className="w-full">
+            <Button variant="destructive" onClick={handleConfirmClick} className="w-full">
               삭제
             </Button>
           </ModalClose>
