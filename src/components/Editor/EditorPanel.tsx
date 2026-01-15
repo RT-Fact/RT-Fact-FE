@@ -3,6 +3,7 @@ import type { Ref } from "react";
 import { Loader2, RotateCcw, Search, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { SentenceWithIndices } from "@/types/factcheck";
 
 import EditorContainer, { type EditorContainerHandle } from "./EditorContainer";
@@ -40,7 +41,12 @@ const EditorPanel = ({
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       {/* Toolbar */}
-      <div className="flex items-center justify-between border-b border-border bg-background/50 px-4 py-3 backdrop-blur-sm">
+      <div
+        className={cn(
+          "flex items-center justify-between",
+          "border-b border-border bg-background/50 px-4 py-3 backdrop-blur-sm",
+        )}
+      >
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <Sparkles className="size-4 text-primary" />
