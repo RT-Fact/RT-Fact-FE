@@ -1,6 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { patchApplyClaim, patchIgnoreClaim, postFactCheck } from "@/api/factcheckApi";
+import {
+  deleteFactCheck,
+  patchApplyClaim,
+  patchIgnoreClaim,
+  postFactCheck,
+} from "@/api/factcheckApi";
+import { factcheckQueries } from "@/queries/factcheckQueries";
 
 interface ClaimMutationParams {
   factcheckId: string;
@@ -24,5 +30,18 @@ export const useIgnoreClaimMutation = () => {
   return useMutation({
     mutationFn: ({ factcheckId, claimId }: ClaimMutationParams) =>
       patchIgnoreClaim(factcheckId, claimId),
+  });
+};
+
+export const useDeleteFactCheckMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteFactCheck,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: factcheckQueries.all(),
+      });
+    },
   });
 };

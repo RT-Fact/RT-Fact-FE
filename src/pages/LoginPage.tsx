@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { User } from "lucide-react";
 
 import { API_BASE_URL } from "@/api/client";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/authStore";
 
 export const LoginPage = () => {
@@ -34,7 +35,12 @@ export const LoginPage = () => {
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className={cn(
+              "flex w-full items-center justify-center gap-3",
+              "rounded-lg border border-gray-300 bg-white px-4 py-3",
+              "text-sm font-medium text-gray-700 transition-colors",
+              "hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+            )}
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
@@ -71,7 +77,12 @@ export const LoginPage = () => {
           <button
             type="button"
             onClick={handleContinueAsGuest}
-            className="flex w-full items-center justify-center gap-3 rounded-lg bg-blue-600 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className={cn(
+              "flex w-full items-center justify-center gap-3",
+              "rounded-lg bg-blue-600 px-4 py-3",
+              "text-sm font-medium text-white transition-colors",
+              "hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
+            )}
           >
             <User className="h-5 w-5" />
             게스트로 계속하기
@@ -83,15 +94,15 @@ export const LoginPage = () => {
           <h3 className="mb-2 text-sm font-semibold text-gray-700">게스트 이용 안내</h3>
           <ul className="space-y-1 text-xs text-gray-500">
             <li className="flex items-start gap-2">
-              <span className="mt-1 h-1 w-1 flex-shrink-0 rounded-full bg-blue-500" />
+              <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-blue-500" />
               3회 무료 팩트체크 이용 가능
             </li>
             <li className="flex items-start gap-2">
-              <span className="mt-1 h-1 w-1 flex-shrink-0 rounded-full bg-blue-500" />
+              <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-blue-500" />
               입증 기록이 저장되지 않습니다
             </li>
             <li className="flex items-start gap-2">
-              <span className="mt-1 h-1 w-1 flex-shrink-0 rounded-full bg-blue-500" />
+              <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-blue-500" />
               7일 후 이용 횟수가 초기화됩니다
             </li>
           </ul>

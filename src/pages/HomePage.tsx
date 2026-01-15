@@ -5,6 +5,8 @@ import { useShallow } from "zustand/shallow";
 
 import type { EditorContainerHandle } from "@/components/Editor/EditorContainer";
 import EditorPanel from "@/components/Editor/EditorPanel";
+import { PreviewConfirmBar } from "@/components/Editor/PreviewConfirmBar";
+import { PreviewErrorBar } from "@/components/Editor/PreviewErrorBar";
 import FactcheckPanel from "@/components/Factcheck/FactcheckPanel";
 import type { ResultsContentHandle } from "@/components/Factcheck/Results/ResultsContent";
 import { DEFAULT_GUEST_USAGE_END } from "@/constants/guest";
@@ -13,6 +15,7 @@ import {
   useFactCheckMutation,
   useIgnoreClaimMutation,
 } from "@/hooks/mutations/useFactCheckMutations";
+import { useHistoryPreview } from "@/hooks/useHistoryPreview";
 import { useAuthStore } from "@/stores/authStore";
 import { useModalStore } from "@/stores/modalStore";
 import type { SentenceWithIndices } from "@/types/factcheck";
@@ -26,10 +29,20 @@ export const HomePage = () => {
   const [sentences, setSentences] = useState<SentenceWithIndices[]>([]);
   const [activeSentenceId, setActiveSentenceId] = useState<string | null>(null);
   const [factcheckId, setFactcheckId] = useState<string>("");
-  const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
 
   const editorRef = useRef<EditorContainerHandle>(null);
   const panelRef = useRef<ResultsContentHandle>(null);
+
+  const {
+    selectedHistoryId,
+    setSelectedHistoryId,
+    previewData,
+    isPreviewError,
+    isPreviewMode,
+    displayText,
+    displaySentences,
+    cancelPreview,
+  } = useHistoryPreview({ text, sentences });
 
   const { mutate: submitFactCheck, isPending } = useFactCheckMutation();
   const { mutate: applyClaim } = useApplyClaimMutation();
@@ -43,6 +56,14 @@ export const HomePage = () => {
     })),
   );
   const setGuestLimitModalOpen = useModalStore((state) => state.setGuestLimitModalOpen);
+
+  const handleApplyPreview = () => {
+    if (!previewData || !selectedHistoryId) return;
+    setText(previewData.originalText);
+    setSentences(calculateIndices(previewData.originalText, previewData.sentences));
+    setFactcheckId(selectedHistoryId);
+    setSelectedHistoryId(null);
+  };
 
   const handleCheck = () => {
     // 게스트이고 남은 횟수가 0 이하면 모달 표시
@@ -174,35 +195,43 @@ export const HomePage = () => {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col lg:flex-row">
-      {/* Editor Column */}
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:w-[60%]">
-        <EditorPanel
-          ref={editorRef}
-          text={text}
-          onTextChange={handleTextChange}
-          sentences={sentences}
-          onCheck={handleCheck}
-          isPending={isPending}
-          onClearSentences={handleClearSentences}
-          activeSentenceId={activeSentenceId}
-          onHighlightClick={handleHighlightClick}
-        />
-      </div>
+    <div className="flex h-full min-h-0 flex-1 flex-col">
+      <main className="flex min-h-0 flex-1 flex-col lg:flex-row">
+        {/* Editor Column */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:w-[60%]">
+          <EditorPanel
+            ref={editorRef}
+            text={displayText}
+            onTextChange={handleTextChange}
+            sentences={displaySentences}
+            onCheck={handleCheck}
+            isPending={isPending}
+            onClearSentences={handleClearSentences}
+            activeSentenceId={activeSentenceId}
+            onHighlightClick={handleHighlightClick}
+            isPreviewMode={isPreviewMode}
+          />
+        </div>
 
-      {/* Results/History Column */}
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-l border-border lg:w-[40%] lg:flex-none">
-        <FactcheckPanel
-          ref={panelRef}
-          sentences={sentences}
-          onApply={handleApply}
-          onIgnore={handleIgnore}
-          activeSentenceId={activeSentenceId}
-          onCardClick={handleCardClick}
-          selectedHistoryId={selectedHistoryId}
-          onSelectHistory={setSelectedHistoryId}
-        />
-      </div>
+        {/* Results/History Column */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden border-l border-border lg:w-[40%] lg:flex-none">
+          <FactcheckPanel
+            ref={panelRef}
+            sentences={displaySentences}
+            onApply={handleApply}
+            onIgnore={handleIgnore}
+            activeSentenceId={activeSentenceId}
+            onCardClick={handleCardClick}
+            selectedHistoryId={selectedHistoryId}
+            onSelectHistory={setSelectedHistoryId}
+            isPreviewMode={isPreviewMode}
+            isGuest={isGuest}
+          />
+        </div>
+      </main>
+
+      {isPreviewError && <PreviewErrorBar onCancel={cancelPreview} />}
+      {isPreviewMode && <PreviewConfirmBar onApply={handleApplyPreview} onCancel={cancelPreview} />}
     </div>
   );
 };

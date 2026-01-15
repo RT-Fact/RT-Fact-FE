@@ -46,14 +46,23 @@ const ModalTrigger = Dialog.Trigger;
 interface ModalContentProps
   extends React.ComponentProps<typeof Dialog.Content>, VariantProps<typeof modalContentVariants> {}
 
-const ModalContent = ({ className, size, children, ref, ...props }: ModalContentProps) => (
-  <Dialog.Portal>
-    <Dialog.Overlay className={modalOverlayVariants()} />
-    <Dialog.Content ref={ref} className={cn(modalContentVariants({ size }), className)} {...props}>
-      {children}
-    </Dialog.Content>
-  </Dialog.Portal>
-);
+const ModalContent = ({ className, size, children, ref, ...props }: ModalContentProps) => {
+  const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
+
+  return (
+    <Dialog.Portal>
+      <Dialog.Overlay className={modalOverlayVariants()} onClick={stopPropagation} />
+      <Dialog.Content
+        ref={ref}
+        className={cn(modalContentVariants({ size }), className)}
+        onClick={stopPropagation}
+        {...props}
+      >
+        {children}
+      </Dialog.Content>
+    </Dialog.Portal>
+  );
+};
 
 // Modal Close Button
 interface ModalCloseProps extends React.ComponentProps<typeof Dialog.Close> {
