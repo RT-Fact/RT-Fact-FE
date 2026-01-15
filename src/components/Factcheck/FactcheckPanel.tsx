@@ -1,5 +1,7 @@
 import { type Ref, useState } from "react";
 
+import { toast } from "sonner";
+
 import type { Sentence } from "@/types/factcheck";
 
 import FactcheckTabHeader from "./FactcheckTabHeader";
@@ -18,6 +20,7 @@ interface FactcheckPanelProps {
   selectedHistoryId: string | null;
   onSelectHistory: (id: string | null) => void;
   isPreviewMode: boolean;
+  isGuest: boolean;
 }
 
 const FactcheckPanel = ({
@@ -30,6 +33,7 @@ const FactcheckPanel = ({
   selectedHistoryId,
   onSelectHistory,
   isPreviewMode,
+  isGuest,
 }: FactcheckPanelProps) => {
   const [selectedTab, setSelectedTab] = useState<TabType>("results");
 
@@ -37,6 +41,12 @@ const FactcheckPanel = ({
 
   const handleTabChange = (tab: TabType) => {
     if (isPreviewMode) return;
+
+    if (tab === "history" && isGuest) {
+      toast.error("로그인이 필요합니다");
+      return;
+    }
+
     setSelectedTab(tab);
   };
 

@@ -225,6 +225,7 @@ export const HomePage = () => {
             selectedHistoryId={selectedHistoryId}
             onSelectHistory={setSelectedHistoryId}
             isPreviewMode={isPreviewMode}
+            isGuest={isGuest}
           />
         </div>
       </main>
