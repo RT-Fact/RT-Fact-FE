@@ -1,5 +1,5 @@
 import type { KeyboardEventHandler, ReactNode } from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Check, Copy, Key } from "lucide-react";
 import { toast } from "sonner";
@@ -54,11 +54,17 @@ export const CreateApiKeyModal = ({ trigger }: CreateApiKeyModalProps) => {
     }
   };
 
+  useEffect(() => {
+    if (!copied) return;
+
+    const timeout = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timeout);
+  }, [copied]);
+
   const copyToClipboard = async () => {
     if (!generatedKey) return;
     await navigator.clipboard.writeText(generatedKey);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleOpenChange = (open: boolean) => {
