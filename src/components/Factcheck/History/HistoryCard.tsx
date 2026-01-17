@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
 import type { HistoryItem } from "@/types/factcheck";
-import { formatDate } from "@/utils/formatDate";
+import { formatRelativeDate } from "@/utils/formatDate";
 
 interface DeleteTriggerProps {
   onConfirm: () => void;
@@ -102,7 +102,9 @@ const HistoryCard = ({ item, isSelected, onSelect, onDelete }: HistoryCardProps)
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                 {item.checkedCount}개 검증
               </span>
-              <span className="text-xs text-muted-foreground">{formatDate(item.createdAt)}</span>
+              <span className="text-xs text-muted-foreground">
+                {formatRelativeDate(item.createdAt)}
+              </span>
             </div>
           </div>
         </div>
