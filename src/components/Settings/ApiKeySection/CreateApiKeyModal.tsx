@@ -1,5 +1,5 @@
 import type { KeyboardEventHandler, ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 import { Check, Copy, Key } from "lucide-react";
 import { toast } from "sonner";
@@ -17,6 +17,7 @@ import {
   ModalTrigger,
 } from "@/components/ui/modal";
 import { useCreateApiKeyMutation } from "@/hooks/mutations/useApiKeyMutations";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 interface CreateApiKeyModalProps {
   trigger: ReactNode;
@@ -24,7 +25,7 @@ interface CreateApiKeyModalProps {
 
 export const CreateApiKeyModal = ({ trigger }: CreateApiKeyModalProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useCopyToClipboard();
   const { mutate, isPending, data, reset } = useCreateApiKeyMutation();
 
   const generatedKey = data?.secretKey;
@@ -54,22 +55,8 @@ export const CreateApiKeyModal = ({ trigger }: CreateApiKeyModalProps) => {
     }
   };
 
-  useEffect(() => {
-    if (!copied) return;
-
-    const timeout = setTimeout(() => setCopied(false), 2000);
-    return () => clearTimeout(timeout);
-  }, [copied]);
-
-  const copyToClipboard = async () => {
-    if (!generatedKey) return;
-    await navigator.clipboard.writeText(generatedKey);
-    setCopied(true);
-  };
-
   const handleOpenChange = (open: boolean) => {
     if (!open) {
-      setCopied(false);
       reset();
     }
   };
@@ -131,7 +118,7 @@ export const CreateApiKeyModal = ({ trigger }: CreateApiKeyModalProps) => {
                   variant="outline"
                   size="sm"
                   className="shrink-0 gap-1.5"
-                  onClick={() => void copyToClipboard()}
+                  onClick={() => void copy(generatedKey)}
                 >
                   {copied ? (
                     <Check className="size-4 text-green-500" />

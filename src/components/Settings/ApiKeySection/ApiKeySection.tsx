@@ -1,9 +1,8 @@
-import { useState } from "react";
-
 import { Check, Copy, Key, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import type { ApiKey } from "@/types/apiKey";
 import { formatAbsoluteDate } from "@/utils/formatDate";
 
@@ -24,14 +23,8 @@ export const ApiKeySection = ({
   onDeleteKey,
   isDeleting = false,
 }: ApiKeySectionProps) => {
-  const [copiedUrl, setCopiedUrl] = useState(false);
+  const { copied: copiedUrl, copy: copyUrl } = useCopyToClipboard();
   const isLimitReached = apiKeys.length >= MAX_API_KEYS;
-
-  const copyMcpUrl = async () => {
-    await navigator.clipboard.writeText(mcpServerUrl);
-    setCopiedUrl(true);
-    setTimeout(() => setCopiedUrl(false), 2000);
-  };
 
   return (
     <Card className="flex flex-col gap-4 p-6">
@@ -55,7 +48,7 @@ export const ApiKeySection = ({
             variant="outline"
             size="sm"
             className="shrink-0 gap-1.5"
-            onClick={() => void copyMcpUrl()}
+            onClick={() => void copyUrl(mcpServerUrl)}
           >
             {copiedUrl ? <Check className="size-4 text-green-500" /> : <Copy className="size-4" />}
             {copiedUrl ? "복사됨" : "복사"}
