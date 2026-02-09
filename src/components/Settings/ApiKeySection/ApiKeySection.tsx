@@ -2,6 +2,7 @@ import { Check, Copy, Key, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import type { ApiKey } from "@/types/apiKey";
 import { formatAbsoluteDate } from "@/utils/formatDate";
@@ -97,15 +98,25 @@ export const ApiKeySection = ({
                     <span>{formatAbsoluteDate(apiKey.createdAt)}</span>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="size-8 text-muted-foreground hover:text-destructive"
-                  onClick={() => onDeleteKey(apiKey.id)}
+                <ConfirmModal
+                  trigger={
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="size-8 text-muted-foreground hover:text-destructive"
+                      disabled={isDeleting}
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  }
+                  title="API Key 삭제"
+                  description={"이 API Key를 삭제하시겠습니까?\n삭제된 키는 복구할 수 없습니다."}
+                  icon={<Trash2 className="size-6 text-destructive" />}
+                  confirmText="삭제"
+                  variant="destructive"
+                  onConfirm={() => onDeleteKey(apiKey.id)}
                   disabled={isDeleting}
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+                />
               </div>
             ))}
           </div>
