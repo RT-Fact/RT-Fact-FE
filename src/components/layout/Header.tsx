@@ -36,7 +36,7 @@ const Header = () => {
         "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
       )}
     >
-      <div className="container flex h-14 items-center pl-4 pr-4">
+      <div className="flex h-14 w-full items-center px-4 sm:px-6">
         {/* Logo */}
         <div className="mr-4 flex">
           <Link to="/" className="mr-6 flex items-center space-x-2">
