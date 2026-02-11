@@ -77,6 +77,24 @@ describe("calculateIndices", () => {
     });
   });
 
+  describe("입력 순서 불일치", () => {
+    it("입력 배열 순서가 텍스트 등장 순서와 다르면 매핑이 깨질 수 있다", () => {
+      // 순방향 탐색(searchFrom) 전제: 뒤 문장을 먼저 찾으면 앞 문장은 미발견(-1) 처리된다.
+      const text = "가. 나.";
+      const sentences = [
+        createSentence("나.", { position: 1 }),
+        createSentence("가.", { position: 0 }),
+      ];
+
+      const result = calculateIndices(text, sentences);
+
+      expect(result[0].startIndex).toBe(3);
+      expect(result[0].endIndex).toBe(5);
+      expect(result[1].startIndex).toBe(-1);
+      expect(result[1].endIndex).toBe(-1);
+    });
+  });
+
   describe("중복 텍스트", () => {
     it("같은 텍스트가 두 번 등장하면 searchFrom 기반으로 순차 탐색한다", () => {
       // "가. 가." → 첫 "가."(0-2), 두 번째 "가."(3-5)
