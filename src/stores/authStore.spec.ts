@@ -1,3 +1,4 @@
+import type { MockInstance } from "vitest";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DEFAULT_GUEST_USAGE } from "@/constants/guest";
@@ -12,8 +13,13 @@ const initialState = {
 };
 
 describe("authStore", () => {
+  let setItemSpy: MockInstance<Storage["setItem"]>;
+
   beforeEach(() => {
     localStorage.clear();
+    vi.spyOn(localStorage, "getItem").mockReturnValue(null);
+    setItemSpy = vi.spyOn(localStorage, "setItem").mockImplementation(() => {});
+    vi.spyOn(localStorage, "removeItem").mockImplementation(() => {});
     useAuthStore.setState(initialState);
   });
 
@@ -198,7 +204,11 @@ describe("authStore", () => {
         user: { id: "1", email: "test@test.com", name: "테스트" },
       });
 
-      const stored = JSON.parse(localStorage.getItem("auth-status") ?? '{"state":{}}') as {
+      const calls = setItemSpy.mock.calls.filter(([key]) => key === "auth-status");
+      expect(calls.length).toBeGreaterThan(0);
+
+      const lastValue = calls[calls.length - 1][1];
+      const stored = JSON.parse(lastValue) as {
         state: { isGuest?: boolean; remainingUses?: number; accessToken?: string; user?: unknown };
       };
 
