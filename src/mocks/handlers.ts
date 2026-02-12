@@ -1,6 +1,6 @@
 import { HttpResponse, http } from "msw";
 
-import { mockFactCheckResponse, mockTestSentences } from "./data/factcheck";
+import { mockFactCheckResponse, mockHistoryItems, mockTestSentences } from "./data/factcheck";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 
@@ -27,5 +27,38 @@ export const handlers = [
       status: "ignored",
       updatedAt: new Date().toISOString(),
     });
+  }),
+
+  http.get(`${BASE_URL}/factcheck`, ({ request }) => {
+    const url = new URL(request.url);
+    const page = Math.max(1, Number(url.searchParams.get("page") ?? "1") || 1);
+    const limit = Math.max(1, Number(url.searchParams.get("limit") ?? "5") || 5);
+
+    const total = mockHistoryItems.length;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    const items = mockHistoryItems.slice(start, end);
+
+    return HttpResponse.json({
+      items,
+      pagination: { page, limit, total, totalPages },
+    });
+  }),
+
+  http.get(`${BASE_URL}/factcheck/:id`, ({ params }) => {
+    const item = mockHistoryItems.find((i) => i.id === params.id);
+    if (!item) {
+      return HttpResponse.json({ message: "Not Found" }, { status: 404 });
+    }
+    return HttpResponse.json({
+      ...mockFactCheckResponse,
+      id: params.id,
+      title: item.title,
+    });
+  }),
+
+  http.delete(`${BASE_URL}/factcheck/:id`, () => {
+    return HttpResponse.json({ success: true });
   }),
 ];
