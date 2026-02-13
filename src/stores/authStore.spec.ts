@@ -196,7 +196,7 @@ describe("authStore", () => {
   });
 
   describe("persist", () => {
-    it("isGuest와 remainingUses만 localStorage에 저장한다", () => {
+    it("accessToken, isGuest, remainingUses를 localStorage에 저장한다", () => {
       useAuthStore.getState().actions.setSession({
         accessToken: "secret-token",
         isGuest: true,
@@ -214,7 +214,7 @@ describe("authStore", () => {
 
       expect(stored.state.isGuest).toBe(true);
       expect(stored.state.remainingUses).toBe(2);
-      expect(stored.state.accessToken).toBeUndefined();
+      expect(stored.state.accessToken).toBe("secret-token");
       expect(stored.state.user).toBeUndefined();
     });
   });

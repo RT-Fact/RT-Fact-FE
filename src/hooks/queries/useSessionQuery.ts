@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { useShallow } from "zustand/shallow";
 
 import { postGuestLogin, postRefreshToken } from "@/api/authApi";
@@ -26,9 +27,16 @@ export const useSessionQuery = () => {
       try {
         const result = await postRefreshToken();
         return { ...result, type: "refresh" as const };
-      } catch {
-        const fallback = await postGuestLogin();
-        return { ...fallback, type: "guest" as const };
+      } catch (error) {
+        // 인증 에러(401/403)만 게스트 전환, 나머지(네트워크/서버 오류)는 전파
+        if (
+          axios.isAxiosError(error) &&
+          (error.response?.status === 401 || error.response?.status === 403)
+        ) {
+          const fallback = await postGuestLogin();
+          return { ...fallback, type: "guest" as const };
+        }
+        throw error;
       }
     },
     enabled: !accessToken,
