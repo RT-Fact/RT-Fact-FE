@@ -1,5 +1,4 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
-import { toast } from "sonner";
 
 import { useAuthStore } from "@/stores/authStore";
 
@@ -16,7 +15,7 @@ export const apiClient = axios.create({
 });
 
 /** 토큰 갱신 전용 클라이언트 (interceptor 없음) */
-const refreshClient = axios.create({
+export const refreshClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
   withCredentials: true,
@@ -24,6 +23,32 @@ const refreshClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// ── 토큰 갱신 ──
+
+interface GuestSessionResponse {
+  accessToken: string;
+  isGuest: boolean;
+  remainingUses: number;
+}
+
+export const refreshGuestToken = async (): Promise<string> => {
+  const { data } = await refreshClient.post<GuestSessionResponse>("/auth/guest");
+  useAuthStore.getState().actions.setSession({
+    accessToken: data.accessToken,
+    isGuest: true,
+    remainingUses: data.remainingUses,
+  });
+  return data.accessToken;
+};
+
+export const refreshAuthToken = async (): Promise<string> => {
+  const { data } = await refreshClient.post<{ accessToken: string }>("/auth/refresh");
+  useAuthStore.getState().actions.setSession({ accessToken: data.accessToken, isGuest: false });
+  return data.accessToken;
+};
+
+// ── Interceptors ──
 
 apiClient.interceptors.request.use((config) => {
   const { accessToken } = useAuthStore.getState();
@@ -82,26 +107,8 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { isGuest, actions } = useAuthStore.getState();
-        let newToken: string;
-
-        if (isGuest) {
-          const { data } = await refreshClient.post<{
-            accessToken: string;
-            isGuest: boolean;
-            remainingUses: number;
-          }>("/auth/guest");
-          actions.setSession({
-            accessToken: data.accessToken,
-            isGuest: true,
-            remainingUses: data.remainingUses,
-          });
-          newToken = data.accessToken;
-        } else {
-          const { data } = await refreshClient.post<{ accessToken: string }>("/auth/refresh");
-          actions.setSession({ accessToken: data.accessToken, isGuest: false });
-          newToken = data.accessToken;
-        }
+        const { isGuest } = useAuthStore.getState();
+        const newToken = isGuest ? await refreshGuestToken() : await refreshAuthToken();
 
         processQueue(null, newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
@@ -116,36 +123,6 @@ apiClient.interceptors.response.use(
       } finally {
         isRefreshing = false;
       }
-    }
-
-    // HTTP 에러 상태별 토스트
-    if (error.response) {
-      const { status } = error.response;
-      const responseData: unknown = error.response.data;
-      const errorCode =
-        typeof responseData === "object" && responseData !== null
-          ? (responseData as { code?: string }).code
-          : undefined;
-
-      switch (status) {
-        case 403:
-          if (errorCode === "GUEST_LIMIT_EXCEEDED") {
-            toast.error("게스트 사용 횟수를 초과했습니다.");
-          } else if (errorCode === "GUEST_NOT_ALLOWED") {
-            toast.error("로그인이 필요한 기능입니다.");
-          } else {
-            toast.error("접근 권한이 없습니다.");
-          }
-          break;
-        case 404:
-          toast.error("요청한 리소스를 찾을 수 없습니다.");
-          break;
-        case 500:
-          toast.error("서버 오류가 발생했습니다.");
-          break;
-      }
-    } else {
-      toast.error("네트워크 오류가 발생했습니다.");
     }
 
     throw error;
