@@ -8,7 +8,6 @@ import { useAuthStore } from "@/stores/authStore";
 
 export const useAuthTokenQuery = (code: string | null) => {
   const navigate = useNavigate();
-  const accessToken = useAuthStore((state) => state.accessToken);
   const setSession = useAuthStore((state) => state.actions.setSession);
 
   const query = useQuery({
@@ -19,7 +18,7 @@ export const useAuthTokenQuery = (code: string | null) => {
       }
       return postAuthToken(code);
     },
-    enabled: !!code && !accessToken,
+    enabled: !!code,
     retry: false,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
@@ -36,11 +35,18 @@ export const useAuthTokenQuery = (code: string | null) => {
   }, [query.isSuccess, query.data, setSession, navigate]);
 
   useEffect(() => {
-    if (query.isError || !code) {
-      console.error("OAuth callback failed");
+    if (query.isError) {
+      console.error("OAuth callback failed:", query.error);
       void navigate("/login");
     }
-  }, [query.isError, code, navigate]);
+  }, [query.isError, query.error, navigate]);
+
+  useEffect(() => {
+    if (!code) {
+      console.error("No auth code in URL");
+      void navigate("/login");
+    }
+  }, [code, navigate]);
 
   return query;
 };
