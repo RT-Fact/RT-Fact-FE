@@ -18,7 +18,7 @@ export const useSessionQuery = () => {
     queryFn: async () => {
       if (isGuest) {
         await refreshGuestToken();
-        return;
+        return null;
       }
 
       try {
@@ -30,10 +30,12 @@ export const useSessionQuery = () => {
           (error.response?.status === 401 || error.response?.status === 403)
         ) {
           await refreshGuestToken();
-          return;
+          return null;
         }
         throw error;
       }
+
+      return null;
     },
     enabled: !accessToken,
     retry: true,
