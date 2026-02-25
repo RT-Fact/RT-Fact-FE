@@ -22,6 +22,7 @@ export const LoginPage = () => {
 
   return (
     <div className="flex flex-1 items-center justify-center bg-background px-4 py-12">
+      <title>RT-Fact | 로그인</title>
       <div className="w-full max-w-sm space-y-6 rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
         {/* Header */}
         <div className="text-center">
