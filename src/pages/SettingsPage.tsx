@@ -90,6 +90,7 @@ export const SettingsPage = () => {
 
   return (
     <div className="h-full w-full overflow-y-auto bg-background">
+      <title>RT-Fact | 설정</title>
       <div className="mx-auto max-w-xl px-4 py-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold">설정</h1>
